@@ -1,6 +1,8 @@
 import FluentProvider
 
-extension Config {
+// TODO: Had to change this from "extension Config" to "extension Vapor.Config" in order to fix namespace collision build failure when I had my own type called "Config".
+//  Create Vapor pull request to fix this.
+extension Vapor.Config {
     public func setup() throws {
         // allow fuzzy conversions for these types
         // (add your own types here)
