@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import Vapor
 
 protocol MockRepresentable {
     static var mock: Self { get }
+    
+    func buildJSON() throws -> JSON
 }
