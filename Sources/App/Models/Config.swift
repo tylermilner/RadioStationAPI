@@ -56,3 +56,7 @@ extension StreamConfig: JSONRepresentable {
         return json
     }
 }
+
+extension Config: ResponseRepresentable { }
+
+extension StreamConfig: ResponseRepresentable { }

@@ -32,3 +32,5 @@ extension NowPlayingInfo: JSONRepresentable {
         return json
     }
 }
+
+extension NowPlayingInfo: ResponseRepresentable { }

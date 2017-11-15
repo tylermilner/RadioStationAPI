@@ -35,3 +35,5 @@ extension DJ: JSONRepresentable {
         return json
     }
 }
+
+extension DJ: ResponseRepresentable { }

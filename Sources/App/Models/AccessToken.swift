@@ -25,3 +25,5 @@ extension AccessToken: JSONRepresentable {
         return json
     }
 }
+
+extension AccessToken: ResponseRepresentable { }

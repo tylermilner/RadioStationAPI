@@ -65,3 +65,7 @@ extension BroadcastInfo: JSONRepresentable {
         return json
     }
 }
+
+extension Show: ResponseRepresentable { }
+
+extension BroadcastInfo: ResponseRepresentable { }

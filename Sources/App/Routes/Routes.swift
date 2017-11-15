@@ -20,49 +20,45 @@ extension Droplet {
 //        try resource("posts", PostController.self)
         
         get("config") { request in
-            return try Config.mock.makeJSON()
+            return Config.mock
         }
         
         post("login") { request in
-            return try AccessToken.mock.makeJSON()
+            return AccessToken.mock
         }
         
         // TODO: Create a "Controller" for nowPlaying endpoint
         get("nowPlaying") { request in
-            return try NowPlayingInfo.mock.makeJSON()
+            return NowPlayingInfo.mock
         }
         
         // TODO: Should probably be PATCH (need to update docs)
         put("nowPlaying") { request in
-            return try NowPlayingInfo.mock.makeJSON()
+            return NowPlayingInfo.mock
         }
         
         // TODO: Create a "Controller" for shows endpoint
         get("shows") { request in
-            let show = try Show.mock.makeJSON()
-            
             var json = JSON()
-            try json.set("shows", [show])
+            try json.set("shows", [Show.mock])
             return json
         }
         
         post("shows") { request in
-            return try Show.mock.makeJSON()
+            return Show.mock
         }
         
         // TODO: GET/PATCH/DELETE for shows/{id} endpoint (do when creating 'ShowsController')
         
         // TODO: Create a "Controller" for djs endpoint
         get("djs") { request in
-            let dj = try DJ.mock.makeJSON()
-            
             var json = JSON()
-            try json.set("djs", [dj])
+            try json.set("djs", [DJ.mock])
             return json
         }
         
         post("djs") { request in
-            return try DJ.mock.makeJSON()
+            return DJ.mock
         }
         
         // TODO: GET/PATCH/DELETE for djs/{id} endpoint (do when creating 'DJsController')
