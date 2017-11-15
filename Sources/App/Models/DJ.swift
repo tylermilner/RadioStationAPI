@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Vapor
 
 struct DJ {
     let id: String
@@ -20,8 +21,10 @@ extension DJ: MockRepresentable {
     static var mock: DJ {
         return DJ(id: "1", handle: "Stunna", firstName: "J.", lastName: "Cappo", showId: "1", isActive: true)
     }
-    
-    func buildJSON() throws -> JSON {
+}
+
+extension DJ: JSONRepresentable {
+    func makeJSON() throws -> JSON {
         var json = JSON()
         try json.set("id", id)
         try json.set("handle", handle)

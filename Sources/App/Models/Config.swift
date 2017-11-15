@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Vapor
 
 struct Config {
     let id: String
@@ -25,9 +26,17 @@ extension Config: MockRepresentable {
     static var mock: Config {
         return Config(id: "1", streamConfigs: [StreamConfig.mock], stationWebsiteURL: URL(string: "https://bassdrive.com/")!)
     }
-    
-    func buildJSON() throws -> JSON {
-        let configs = streamConfigs.map { try? $0.buildJSON() }
+}
+
+extension StreamConfig: MockRepresentable {
+    static var mock: StreamConfig {
+        return StreamConfig(name: "AAC+ high quality US", extension: "aac+", bitrate: 256, url: URL(string: "https://bassdrive.com/bassdrive3.m3u")!, qualityScore: 100)
+    }
+}
+
+extension Config: JSONRepresentable {
+    func makeJSON() throws -> JSON {
+        let configs = streamConfigs.map { try? $0.makeJSON() }
         
         var json = JSON()
         try json.set("streamConfigs", configs)
@@ -36,12 +45,8 @@ extension Config: MockRepresentable {
     }
 }
 
-extension StreamConfig: MockRepresentable {
-    static var mock: StreamConfig {
-        return StreamConfig(name: "AAC+ high quality US", extension: "aac+", bitrate: 256, url: URL(string: "https://bassdrive.com/bassdrive3.m3u")!, qualityScore: 100)
-    }
-    
-    func buildJSON() throws -> JSON {
+extension StreamConfig: JSONRepresentable {
+    func makeJSON() throws -> JSON {
         var json = JSON()
         try json.set("name", name)
         try json.set("extension", `extension`)
