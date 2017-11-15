@@ -32,7 +32,7 @@ extension Droplet {
             return NowPlayingInfo.mock
         }
         
-        // TODO: Should probably be PATCH (need to update docs)
+        // TODO: Should we support PATCH here too? (partial update)
         put("nowPlaying") { request in
             return NowPlayingInfo.mock
         }
