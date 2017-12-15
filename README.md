@@ -12,7 +12,8 @@ Based on the RAML API spec located [here](https://github.com/tylermilner/RadioSt
 **Base URL**
 
 `https://radiostationapi-dev.vapor.cloud`
-*Please note that no root route exists so don't expect to see anything if you copy/paste the link into your web browser.*
+
+*Please note that no root route exists so don't expect to see anything if you copy/paste the base URL into your web browser.*
 
 **Docs**
 
@@ -20,11 +21,11 @@ Documentation is available in `Public/docs/index.html` or can be viewed [online]
 
 ### Endpoints
 
-GET /config
-POST /login
-GET /nowPlaying
-PUT /nowPlaying
-GET /shows
-POST /shows
-GET /djs
-POST /djs
+* GET /config
+* POST /login
+* GET /nowPlaying
+* PUT /nowPlaying
+* GET /shows
+* POST /shows
+* GET /djs
+* POST /djs
