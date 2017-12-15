@@ -1,0 +1,259 @@
+<!DOCTYPE HTML><html><head><title>Radio Station</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="https://github.com/raml2html/raml2html 6.4.1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 15px;
+    line-height: 1.5em;
+    color: #24292e;
+  }
+
+  p {
+    margin: 1em 0;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 1.5em;
+  }
+
+  h2 {
+    font-size: 1.6em;
+    margin-bottom: 1em;
+  }
+
+  h3 {
+    font-size: 1.4em;
+    font-weight: bold;
+  }
+
+  h4, h5 {
+    font-weight: normal;
+    margin: 1em 0;
+  }
+
+  h4 {
+    font-size: 1.4em;
+  }
+
+  h5 {
+    font-size: 1em;
+    font-weight: bold;
+  }
+
+  ul {
+    list-style-type: disc;
+    padding-left: 2em;
+  }
+
+  ul li {
+    margin-bottom: 0.5em;
+  }
+
+  ul li p {
+    margin: 0 0 1em 0;
+  }
+
+  a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus {
+    text-decoration: underline;
+  }
+
+  h5 a,
+  h5 a:focus,
+  h5 a:hover {
+    text-decoration: none;
+    border-bottom: 1px dashed #428bca;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  .resource-body {
+    padding: 0.5em 2em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: none;
+  }
+
+  pre {
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    padding: 1em;
+    margin: 1em 0;
+    overflow: auto;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  }
+
+  .container {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: justify;
+    margin-bottom: 50px;
+    padding: 0 20px;
+  }
+
+  @media (min-width:768px) {
+    .container {
+      width: 750px;
+    }
+  }
+
+  @media (min-width:992px) {
+    .container {
+      width: 950px;
+    }
+  }
+
+  @media (min-width:1200px) {
+    .container {
+      width: 1000px;
+    }
+  </style></head><body><div class="container"><h1>Radio Station (v1)</h1><p>http://api.samplehost.com</p><ul></ul><h2>Table of contents</h2><ul><li><a href="#config">/config</a></li><li><a href="#login">/login</a></li><li><a href="#nowplaying">/nowPlaying</a></li><li><a href="#shows">/shows</a></li><li><a href="#djs">/djs</a></li></ul><h2 id="config" class="panel-title">/config</h2><div><p>Station configuration.</p></div><div class="resource"><div id="config_get"><h3>GET /config</h3><div class="description"><p>Fetch the current station configuration.</p></div><code>
+          <pre>GET /config</pre>
+        </code><div><div id="config_get_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#config_get_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="config_get_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>streams</strong>: <em>required (array of )</em></li><li><strong>stationWebsiteUrl</strong>: <em>required (string)</em></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "1",
+  "streams": [
+    {
+      "name": "AAC+ high quality US",
+      "extension": "aac+",
+      "bitrate": 256,
+      "url": "http://bassdrive.com/bassdrive3.m3u",
+      "qualityScore": 100
+    },
+    {
+      "name": "MP3 standard quality US",
+      "extension": "mp3",
+      "bitrate": 128,
+      "url": "http://bassdrive.com/bassdrive.m3u",
+      "qualityScore": 50
+    }
+  ],
+  "stationWebsiteUrl": "http://bassdrive.com/"
+}</code></pre></div></div></div></div></div></div><h2 id="login" class="panel-title">/login</h2><div><p>Authenticate with the station. Used by DJs or admins that have been manually registered with the station.</p></div><div class="resource"><div id="login_post"><h3>POST /login</h3><div class="description"><p>Login to the station using username/password credentials to obtain a session token.</p></div><code>
+          <pre>POST /login</pre>
+        </code><div><div id="login_post_request"><h5><a href="#" onclick="$('#login_post_request_body').toggle(); return false">Body</a></h5><div class="resource-body" id="login_post_request_body"><p><strong>Media type</strong>: application/x-www-form-urlencoded</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><div><ul><li><strong>email</strong>: <em>required (string)</em></li><li><strong>password</strong>: <em>required (string)</em></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "email": "dj1@stationdomain.com",
+  "password": "abc123"
+}</code></pre></div></div></div><div id="login_post_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#login_post_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="login_post_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><ul><li><strong>token</strong>: <em>required (string)</em></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773"
+}</code></pre></div></div><h4>Response 401</h4><p>401 Unauthorized response indicates that the credentials were not valid.</p></div></div></div></div><h2 id="nowplaying" class="panel-title">/nowPlaying</h2><div><p>Now playing information.</p></div><div class="resource"><div id="nowplaying_get"><h3>GET /nowPlaying</h3><div class="description"><p>Fetch the current now playing information.</p></div><code>
+          <pre>GET /nowPlaying</pre>
+        </code><div><div id="nowplaying_get_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#nowplaying_get_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="nowplaying_get_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>djName</strong>: <em>required (string)</em></li><li><strong>showName</strong>: <em>required (string)</em></li><li><strong>trackTitle</strong>: <em>(string)</em></li><li><strong>trackArtist</strong>: <em>(string)</em></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "1",
+  "djName": "Stunna",
+  "showName": "The Greenroom",
+  "trackTitle": "Can&#39;t Stop",
+  "trackArtist": "Command Strange"
+}</code></pre></div></div></div></div></div><div id="nowplaying_put"><h3>PUT /nowPlaying</h3><div class="description"><p>Update the now playing information.</p></div><code>
+          <pre>PUT /nowPlaying</pre>
+        </code><div><div id="nowplaying_put_request"><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul><h5><a href="#" onclick="$('#nowplaying_put_request_body').toggle(); return false">Body</a></h5><div class="resource-body" id="nowplaying_put_request_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><div><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>djName</strong>: <em>required (string)</em></li><li><strong>showName</strong>: <em>required (string)</em></li><li><strong>trackTitle</strong>: <em>(string)</em></li><li><strong>trackArtist</strong>: <em>(string)</em></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "1",
+  "djName": "Stunna",
+  "showName": "The Greenroom",
+  "trackTitle": "Can&#39;t Stop",
+  "trackArtist": "Command Strange"
+}</code></pre></div></div></div><div id="nowplaying_put_response"><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div></div><h2 id="shows" class="panel-title">/shows</h2><div><p>Retrieve/edit all of the station&#39;s shows.</p></div><div class="resource"><div id="shows_get"><h3>GET /shows</h3><div class="description"><p>Get a list of Shows.</p></div><code>
+          <pre>GET /shows</pre>
+        </code><div><div id="shows_get_request"><h5>Query Parameters</h5><ul><li><strong>dayOfWeek</strong>: <em>required (one of mon, tues, wed, thurs, fri, sat, sun)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li></ul></div><div id="shows_get_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#shows_get_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="shows_get_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: array of Show</p><p><strong>Items</strong>: Show</p><div class="items"><ul><li><strong>description</strong>: <em>required (string)</em></li><li><strong>broadcastInfo</strong>: <em>required (object)</em><ul></ul></li><li><strong>name</strong>: <em>required (string)</em></li><li><strong>djId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li><li><strong>id</strong>: <em>required (string)</em></li><li><strong>nextBroadcastTime</strong>: <em>required (integer)</em></li><li><strong>soundcloudUrl</strong>: <em>required (string)</em></li><li><strong>avatarUrl</strong>: <em>required (string)</em></li></ul></div></div></div></div></div><div id="shows_post"><h3>POST /shows</h3><div class="description"><p>Add a new Show to the station.</p></div><code>
+          <pre>POST /shows</pre>
+        </code><div><div id="shows_post_request"><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul><h5><a href="#" onclick="$('#shows_post_request_body').toggle(); return false">Body</a></h5><div class="resource-body" id="shows_post_request_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><div><ul><li><strong>description</strong>: <em>required (string)</em></li><li><strong>broadcastInfo</strong>: <em>required (object)</em><ul></ul></li><li><strong>name</strong>: <em>required (string)</em></li><li><strong>djId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li><li><strong>id</strong>: <em>required (string)</em></li><li><strong>nextBroadcastTime</strong>: <em>required (integer)</em></li><li><strong>soundcloudUrl</strong>: <em>required (string)</em></li><li><strong>avatarUrl</strong>: <em>required (string)</em></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "5",
+  "name": "The Greenroom",
+  "description": "A classically­ trained keyboardist and working musician based in Chicago, STUNNA (aka J. Cappo) has crafted his own unique sound within the fast­paced world of Drum + Bass music",
+  "djId": "2",
+  "broadcastInfo": {
+    "location": "Chicago, IL, USA",
+    "dayOfWeek": "Wednesday",
+    "startTime": "14:00",
+    "endTime": "17:00"
+  },
+  "nextBroadcastTime": 1490814000,
+  "avatarUrl": "http://bassdrive.com/img/radio_schedule_entries/image/original/stunnagreenroompromo1nufinalhalf-74.jpg",
+  "soundcloudUrl": "https://soundcloud.com/stunna",
+  "isActive": true
+}</code></pre></div></div></div><div id="shows_post_response"><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div></div><div class="resource"><div id="shows__id__get"><h3>GET /shows/{id}</h3><div class="description"><p>Get the Show with ShowId = {id}.</p></div><code>
+          <pre>GET /shows/{id}</pre>
+        </code><div><div id="shows__id__get_request"><h5>URI Parameters</h5><ul><li><strong>id</strong>: <em>required (string)</em></li></ul></div><div id="shows__id__get_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#shows__id__get_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="shows__id__get_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><ul><li><strong>description</strong>: <em>required (string)</em></li><li><strong>broadcastInfo</strong>: <em>required (object)</em><ul></ul></li><li><strong>name</strong>: <em>required (string)</em></li><li><strong>djId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li><li><strong>id</strong>: <em>required (string)</em></li><li><strong>nextBroadcastTime</strong>: <em>required (integer)</em></li><li><strong>soundcloudUrl</strong>: <em>required (string)</em></li><li><strong>avatarUrl</strong>: <em>required (string)</em></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "5",
+  "name": "The Greenroom",
+  "description": "A classically­ trained keyboardist and working musician based in Chicago, STUNNA (aka J. Cappo) has crafted his own unique sound within the fast­paced world of Drum + Bass music",
+  "djId": "2",
+  "broadcastInfo": {
+    "location": "Chicago, IL, USA",
+    "dayOfWeek": "Wednesday",
+    "startTime": "14:00",
+    "endTime": "17:00"
+  },
+  "nextBroadcastTime": 1490814000,
+  "avatarUrl": "http://bassdrive.com/img/radio_schedule_entries/image/original/stunnagreenroompromo1nufinalhalf-74.jpg",
+  "soundcloudUrl": "https://soundcloud.com/stunna",
+  "isActive": true
+}</code></pre></div></div></div></div></div><div id="shows__id__put"><h3>PUT /shows/{id}</h3><div class="description"><p>Edit the Show with ShowId = {id}.</p></div><code>
+          <pre>PUT /shows/{id}</pre>
+        </code><div><div id="shows__id__put_request"><h5>URI Parameters</h5><ul><li><strong>id</strong>: <em>required (string)</em></li></ul><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul><h5><a href="#" onclick="$('#shows__id__put_request_body').toggle(); return false">Body</a></h5><div class="resource-body" id="shows__id__put_request_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><div><ul><li><strong>description</strong>: <em>required (string)</em></li><li><strong>broadcastInfo</strong>: <em>required (object)</em><ul></ul></li><li><strong>name</strong>: <em>required (string)</em></li><li><strong>djId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li><li><strong>id</strong>: <em>required (string)</em></li><li><strong>nextBroadcastTime</strong>: <em>required (integer)</em></li><li><strong>soundcloudUrl</strong>: <em>required (string)</em></li><li><strong>avatarUrl</strong>: <em>required (string)</em></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "5",
+  "name": "The Greenroom",
+  "description": "A classically­ trained keyboardist and working musician based in Chicago, STUNNA (aka J. Cappo) has crafted his own unique sound within the fast­paced world of Drum + Bass music",
+  "djId": "2",
+  "broadcastInfo": {
+    "location": "Chicago, IL, USA",
+    "dayOfWeek": "Wednesday",
+    "startTime": "14:00",
+    "endTime": "17:00"
+  },
+  "nextBroadcastTime": 1490814000,
+  "avatarUrl": "http://bassdrive.com/img/radio_schedule_entries/image/original/stunnagreenroompromo1nufinalhalf-74.jpg",
+  "soundcloudUrl": "https://soundcloud.com/stunna",
+  "isActive": true
+}</code></pre></div></div></div><div id="shows__id__put_response"><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div><div id="shows__id__delete"><h3>DELETE /shows/{id}</h3><div class="description"><p>Delete the Show with ShowId = {id}.</p></div><code>
+          <pre>DELETE /shows/{id}</pre>
+        </code><div><div id="shows__id__delete_request"><h5>URI Parameters</h5><ul><li><strong>id</strong>: <em>required (string)</em></li></ul><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul></div><div id="shows__id__delete_response"><h4>Response 204</h4><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div></div><h2 id="djs" class="panel-title">/djs</h2><div><p>Retrieve/edit DJs associated with the station.</p></div><div class="resource"><div id="djs_get"><h3>GET /djs</h3><div class="description"><p>Get a list of DJs.</p></div><code>
+          <pre>GET /djs</pre>
+        </code><div><div id="djs_get_request"><h5>Query Parameters</h5><ul><li><strong>isActive</strong>: <em>required (boolean)</em></li></ul></div><div id="djs_get_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#djs_get_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="djs_get_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: array of DJ</p><p><strong>Items</strong>: DJ</p><div class="items"><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>handle</strong>: <em>required (string)</em></li><li><strong>firstName</strong>: <em>required (string)</em></li><li><strong>lastName</strong>: <em>required (string)</em></li><li><strong>showId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li></ul></div></div></div></div></div><div id="djs_post"><h3>POST /djs</h3><div class="description"><p>Add a new DJ to the station.</p></div><code>
+          <pre>POST /djs</pre>
+        </code><div><div id="djs_post_request"><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul><h5><a href="#" onclick="$('#djs_post_request_body').toggle(); return false">Body</a></h5><div class="resource-body" id="djs_post_request_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><div><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>handle</strong>: <em>required (string)</em></li><li><strong>firstName</strong>: <em>required (string)</em></li><li><strong>lastName</strong>: <em>required (string)</em></li><li><strong>showId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "1",
+  "handle": "Overfiend",
+  "firstName": "Louis",
+  "lastName": "Overfiend",
+  "showId": "1",
+  "isActive": true
+}</code></pre></div></div></div><div id="djs_post_response"><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div></div><div class="resource"><div id="djs__id__get"><h3>GET /djs/{id}</h3><div class="description"><p>Get the DJ with DJId = {id}.</p></div><code>
+          <pre>GET /djs/{id}</pre>
+        </code><div><div id="djs__id__get_request"><h5>URI Parameters</h5><ul><li><strong>id</strong>: <em>required (string)</em></li></ul></div><div id="djs__id__get_response"><h4>Response 200</h4><h5><a href="#" onclick="$('#djs__id__get_response_body').toggle(); return false">Body</a></h5><div class="resource-body" id="djs__id__get_response_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>handle</strong>: <em>required (string)</em></li><li><strong>firstName</strong>: <em>required (string)</em></li><li><strong>lastName</strong>: <em>required (string)</em></li><li><strong>showId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "1",
+  "handle": "Overfiend",
+  "firstName": "Louis",
+  "lastName": "Overfiend",
+  "showId": "1",
+  "isActive": true
+}</code></pre></div></div></div></div></div><div id="djs__id__put"><h3>PUT /djs/{id}</h3><div class="description"><p>Edit the DJ with DJId = {id}.</p></div><code>
+          <pre>PUT /djs/{id}</pre>
+        </code><div><div id="djs__id__put_request"><h5>URI Parameters</h5><ul><li><strong>id</strong>: <em>required (string)</em></li></ul><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul><h5><a href="#" onclick="$('#djs__id__put_request_body').toggle(); return false">Body</a></h5><div class="resource-body" id="djs__id__put_request_body"><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><p><strong>Properties:</strong></p><div><ul><li><strong>id</strong>: <em>required (string)</em></li><li><strong>handle</strong>: <em>required (string)</em></li><li><strong>firstName</strong>: <em>required (string)</em></li><li><strong>lastName</strong>: <em>required (string)</em></li><li><strong>showId</strong>: <em>required (string)</em></li><li><strong>isActive</strong>: <em>required (boolean)</em></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+  "id": "1",
+  "handle": "Overfiend",
+  "firstName": "Louis",
+  "lastName": "Overfiend",
+  "showId": "1",
+  "isActive": true
+}</code></pre></div></div></div><div id="djs__id__put_response"><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div><div id="djs__id__delete"><h3>DELETE /djs/{id}</h3><div class="description"><p>Delete the DJ with DJId = {id}.</p></div><code>
+          <pre>DELETE /djs/{id}</pre>
+        </code><div><div id="djs__id__delete_request"><h5>URI Parameters</h5><ul><li><strong>id</strong>: <em>required (string)</em></li></ul><h5>Headers</h5><ul><li><strong>Authorization</strong>: <em>required (string)</em><p>Authorization bearer header must contain the user session token.</p><p><strong>Example</strong>:</p><div class="examples"><pre><code>Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjEzMDA4MTkzODAsIm5hbWUiOiJDaHJpcyBTZXZpbGxlamEiLCJhZG1pbiI6dHJ1ZX0.03f329983b86f7d9a9f5fef85305880101d5e302afafa20154d094b229f75773</code></pre></div></li></ul></div><div id="djs__id__delete_response"><h4>Response 204</h4><h4>Response 401</h4><p>A 401 Unauthorized response indicates that the user session token is not valid. A new token should be obtained by logging in again.</p></div></div></div></div></div></body></html>
