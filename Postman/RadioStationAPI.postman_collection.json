@@ -1,8 +1,7 @@
 {
 	"info": {
-		"name": "RadioStationAPI",
 		"_postman_id": "a29a5907-b450-be78-770c-a099e0e0cd13",
-		"description": "",
+		"name": "RadioStationAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -38,8 +37,7 @@
 					"path": [
 						"config"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -75,8 +73,7 @@
 					"path": [
 						"nowPlaying"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -112,8 +109,7 @@
 					"path": [
 						"shows"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -149,8 +145,7 @@
 					"path": [
 						"login"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -186,8 +181,7 @@
 					"path": [
 						"nowPlaying"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -223,8 +217,7 @@
 					"path": [
 						"shows"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -234,7 +227,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"type": "text/javascript",
+						"id": "db5c0bc6-4ffa-45a4-884d-69c4af6b266b",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -242,9 +235,9 @@
 							"",
 							"pm.test(\"Quick JSON check\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.djs).to.not.eql(undefined);",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -260,8 +253,7 @@
 					"path": [
 						"djs"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -271,7 +263,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"type": "text/javascript",
+						"id": "0cf728fb-41a6-4e4b-8262-af8eb64f1b31",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -280,15 +272,30 @@
 							"pm.test(\"Quick JSON check\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id).to.not.eql(undefined);",
+							"    ",
+							"    var djId = jsonData.id;",
+							"    ",
+							"    pm.environment.set(\"djId\", djId);",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
-				"body": {},
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"handle\": \"dj_tester\",\n    \"firstName\": \"test\",\n    \"lastName\": \"tester\",\n    \"isActive\": true\n}"
+				},
 				"url": {
 					"raw": "{{baseURL}}/djs",
 					"host": [
@@ -297,8 +304,43 @@
 					"path": [
 						"djs"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete DJ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c9081ae-b830-45bb-8281-a0b0a44bcc59",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
-				"description": ""
+				"url": {
+					"raw": "{{baseURL}}/djs/{{djId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"djs",
+						"{{djId}}"
+					]
+				}
 			},
 			"response": []
 		}

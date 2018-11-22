@@ -14,7 +14,7 @@ struct DJ: SQLiteModel {
     let handle: String
     let firstName: String
     let lastName: String
-    let showId: String
+//    let showId: String
     let isActive: Bool
 }
 

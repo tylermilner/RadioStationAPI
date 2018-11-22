@@ -17,4 +17,9 @@ public func routes(_ router: Router) throws {
     router.get("todos", use: todoController.index)
     router.post("todos", use: todoController.create)
     router.delete("todos", Todo.parameter, use: todoController.delete)
+    
+    let djController = DJController()
+    router.get("djs", use: djController.index)
+    router.post("djs", use: djController.create)
+    router.delete("djs", DJ.parameter, use: djController.delete)
 }
