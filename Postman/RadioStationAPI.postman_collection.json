@@ -83,7 +83,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"type": "text/javascript",
+						"id": "42c75854-79e8-4e5e-a8c4-dc5224974215",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -93,7 +93,8 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.shows).to.not.eql(undefined);",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -108,6 +109,79 @@
 					],
 					"path": [
 						"shows"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Show",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dabd6cb8-45c3-4493-8b5c-4226412dc70b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Quick JSON check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.not.eql(undefined);",
+							"    ",
+							"    var showId = jsonData.id;",
+							"    ",
+							"    pm.environment.set(\"showId\", showId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test\",\n    \"description\": \"test show\",\n    \"avatarURL\": \"https://placekitten.com/g/400/400\",\n    \"soundcloudURL\": \"https://soundcloud.com\",\n    \"isActive\": true\n}"
+				},
+				"url": {
+					"raw": "{{baseURL}}/shows",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"shows"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Show",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseURL}}/shows/{{showId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"shows",
+						"{{showId}}"
 					]
 				}
 			},
@@ -180,42 +254,6 @@
 					],
 					"path": [
 						"nowPlaying"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Show",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Quick JSON check\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.not.eql(undefined);",
-							"});"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{baseURL}}/shows",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"shows"
 					]
 				}
 			},

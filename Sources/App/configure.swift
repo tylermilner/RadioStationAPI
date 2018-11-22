@@ -29,5 +29,6 @@ public func configure(_ config: inout Vapor.Config, _ env: inout Environment, _ 
     var migrations = MigrationConfig()
     migrations.add(model: Todo.self, database: .sqlite)
     migrations.add(model: DJ.self, database: .sqlite)
+    migrations.add(model: Show.self, database: .sqlite)
     services.register(migrations)
 }

@@ -22,4 +22,9 @@ public func routes(_ router: Router) throws {
     router.get("djs", use: djController.index)
     router.post("djs", use: djController.create)
     router.delete("djs", DJ.parameter, use: djController.delete)
+    
+    let showController = ShowController()
+    router.get("shows", use: showController.index)
+    router.post("shows", use: showController.create)
+    router.delete("shows", Show.parameter, use: showController.delete)
 }
