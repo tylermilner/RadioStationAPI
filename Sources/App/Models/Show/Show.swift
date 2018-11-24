@@ -14,7 +14,7 @@ struct Show: SQLiteModel {
     let name: String
     let description: String
     let djId: DJ.ID
-//    let broadcastInfo: BroadcastInfo
+    let broadcastInfo: BroadcastInfo
     let nextBroadcastStartTime: Date?
     let avatarURL: URL
     let soundcloudURL: URL?

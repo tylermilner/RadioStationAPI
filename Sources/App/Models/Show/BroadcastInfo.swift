@@ -5,17 +5,11 @@
 //  Created by Tyler Milner on 11/21/18.
 //
 
-import FluentSQLite
-import Vapor
+import Foundation
 
-struct BroadcastInfo: SQLiteModel {
-    var id: Int?
-    
+struct BroadcastInfo: Codable {
     let location: String
     let dayOfWeek: String
-    let startTime: String // In the format "HH:mm"
-    let endTime: String // In the format "HH:mm"
+    let startTime: String // In the format "HH:mm" (military time)
+    let endTime: String // In the format "HH:mm" (military time)
 }
-
-extension BroadcastInfo: Migration { }
-extension BroadcastInfo: Content { }

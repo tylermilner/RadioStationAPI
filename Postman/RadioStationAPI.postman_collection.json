@@ -151,7 +151,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"test\",\n    \"description\": \"test show\",\n    \"avatarURL\": \"https://placekitten.com/g/400/400\",\n    \"soundcloudURL\": \"https://soundcloud.com\",\n    \"isActive\": true\n}"
+					"raw": "{\n    \"name\": \"Test Show\",\n    \"description\": \"This is the description for the Test Show.\",\n    \"djId\": 1,\n    \"broadcastInfo\": {\n    \t\"location\": \"Dallas, TX, USA\",\n    \t\"dayOfWeek\": \"Friday\",\n    \t\"startTime\": \"12:00\",\n    \t\"endTime\": \"14:00\"\n    },\n    \"avatarURL\": \"https://placekitten.com/g/400/400\",\n    \"soundcloudURL\": \"https://soundcloud.com\",\n    \"isActive\": true\n}"
 				},
 				"url": {
 					"raw": "{{baseURL}}/shows",
