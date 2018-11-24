@@ -14,8 +14,14 @@ struct DJ: SQLiteModel {
     let handle: String
     let firstName: String
     let lastName: String
-//    let showId: String
+    let showId: Show.ID?
     let isActive: Bool
+}
+
+extension DJ {
+    var show: Parent<DJ, Show>? {
+        return parent(\.showId)
+    }
 }
 
 extension DJ: Migration { }

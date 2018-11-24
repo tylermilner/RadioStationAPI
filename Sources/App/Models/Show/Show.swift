@@ -13,12 +13,18 @@ struct Show: SQLiteModel {
     
     let name: String
     let description: String
-//    let djId: String
+    let djId: DJ.ID
 //    let broadcastInfo: BroadcastInfo
     let nextBroadcastStartTime: Date?
     let avatarURL: URL
     let soundcloudURL: URL?
     let isActive: Bool
+}
+
+extension Show {
+    var dj: Parent<Show, DJ> {
+        return parent(\.djId)
+    }
 }
 
 extension Show: Migration { }
