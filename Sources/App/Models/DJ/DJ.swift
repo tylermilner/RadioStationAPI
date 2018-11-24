@@ -14,7 +14,7 @@ struct DJ: SQLiteModel {
     let handle: String
     let firstName: String
     let lastName: String
-    let showId: Show.ID?
+    let showId: Show.ID? // TODO: Add support for a DJ to belong to multiple Shows
     let isActive: Bool
 }
 
