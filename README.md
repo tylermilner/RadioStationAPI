@@ -79,3 +79,27 @@ swift run Run serve -b 0.0.0.0
 ```
 
 Now you can access the API at `http://localhost:8080`.
+
+## Developing in Xcode
+
+Starting up and attaching to a Docker container is good to do in order to check and make sure everything will work properly when deployed, but it's not a very convenient mechanism for day-to-day development. Ideally, you will want to open the repo, do a `swift package generate-xcodeproj` to generate the Xcode project (or `vapor xcode -y`), and then build and run in Xcode to test things out as you build features.
+
+Since the `startDockerDev.sh` script uses the `docker-compose-dev.yml` to start up both the database and vapor app containers at once, it makes it impossible for you to use Xcode to connect to database container (since the database container's port `5432` is already assigned to the `api-dev` container). Instead, we need a way to start up just the PostgreSQL database container without starting the Vapor app's container. Execute the `startDockerDev_db-only.sh` script to do just that:
+
+```bash
+./startDockerDev_db-only.sh
+```
+
+Or, you can start just the database container manually using `docker-compose`:
+
+```bash
+docker-compose --file docker-compose-dev.yml up -d db
+```
+
+Now only the PostgreSQL database container will be started, which will allow you to build and run from Xcode.
+
+### A Quick Note About Environment Variables
+
+If you look at `configure.swift`, you'll see that `Environment.get()` is used to get parameters used to setup the PostgreSQL database. In case the environment variables are not present, we provide default values to fall back on. This allows us to build and run inside of Xcode very easily, since we can use the default values rather than worrying about setting up environment variables in Xcode.
+
+When running the app inside our development Docker container, we provide the necessary environment variables in `docker-compose-dev.yml`. This allows the app to connect to the `"db"` hostname exposed by Docker when run from _inside_ of the Docker container, but fall back to the`"localhost"` hostname when run from _outside_ of the container (via Xcode). This way, we can easily do day-to-day development inside of Xcode, only using Docker to spin up the PostgreSQL database, and still have a convenient way to periodically make sure the app works properly in a Docker/Linux environment that we will eventually deploy to.
