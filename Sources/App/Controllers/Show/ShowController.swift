@@ -8,10 +8,20 @@
 import Vapor
 
 /// Controls basic CRUD operations on `Show`s.
-final class ShowController {
+final class ShowController: RouteCollection {
+    
+    // MARK: - RouteCollection
+    
+    func boot(router: Router) throws {
+        router.group("shows") { router in
+            router.get(use: getAll)
+            router.post(use: create)
+            router.delete(Show.parameter, use: delete)
+        }
+    }
     
     /// Returns a list of all `Show`s.
-    func index(_ req: Request) throws -> Future<[Show]> {
+    func getAll(_ req: Request) throws -> Future<[Show]> {
         return Show.query(on: req).all()
     }
     

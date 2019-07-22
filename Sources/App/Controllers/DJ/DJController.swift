@@ -8,10 +8,20 @@
 import Vapor
 
 /// Controls basic CRUD operations on `DJ`s.
-final class DJController {
+final class DJController: RouteCollection {
+    
+    // MARK: - RouteCollection
+    
+    func boot(router: Router) throws {
+        router.group("djs") { router in
+            router.get(use: getAll)
+            router.post(use: create)
+            router.delete(DJ.parameter, use: delete)
+        }
+    }
     
     /// Returns a list of all `DJ`s.
-    func index(_ req: Request) throws -> Future<[DJ]> {
+    func getAll(_ req: Request) throws -> Future<[DJ]> {
         return DJ.query(on: req).all()
     }
     
