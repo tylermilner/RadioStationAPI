@@ -5,10 +5,9 @@
 //  Created by Tyler Milner on 11/21/18.
 //
 
-import FluentSQLite
 import Vapor
 
-struct StreamConfig: SQLiteModel {
+struct StreamConfig {
     var id: Int?
     
     let name: String
@@ -17,6 +16,3 @@ struct StreamConfig: SQLiteModel {
     let url: URL
     let qualityScore: Int
 }
-
-extension StreamConfig: Migration { }
-extension StreamConfig: Content { }

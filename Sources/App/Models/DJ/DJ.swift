@@ -5,10 +5,10 @@
 //  Created by Tyler Milner on 11/21/18.
 //
 
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
-struct DJ: SQLiteModel {
+struct DJ: Codable {
     var id: Int?
     
     let handle: String
@@ -18,12 +18,7 @@ struct DJ: SQLiteModel {
     let isActive: Bool
 }
 
-extension DJ {
-    var show: Parent<DJ, Show>? {
-        return parent(\.showId)
-    }
-}
-
+extension DJ: PostgreSQLModel { }
 extension DJ: Migration { }
 extension DJ: Content { }
 extension DJ: Parameter { }

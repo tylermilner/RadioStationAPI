@@ -5,10 +5,10 @@
 //  Created by Tyler Milner on 11/21/18.
 //
 
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
-struct NowPlayingInfo: SQLiteModel {
+struct NowPlayingInfo: Codable {
     var id: Int?
     
     let djName: String?
@@ -17,5 +17,6 @@ struct NowPlayingInfo: SQLiteModel {
     let trackArtist: String?
 }
 
+extension NowPlayingInfo: PostgreSQLModel { }
 extension NowPlayingInfo: Migration { }
 extension NowPlayingInfo: Content { }
