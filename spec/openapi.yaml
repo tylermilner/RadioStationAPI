@@ -24,6 +24,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /login:
+    post:
+      summary: 'Authenticate with the station (e.g. station manager)'
 components:
   schemas:
     Config:
