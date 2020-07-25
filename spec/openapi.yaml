@@ -64,6 +64,8 @@ components:
           type: string
         qualityScore:
           type: integer
+    AuthenticationResponse:
+      type: object
     Error:
       type: object
       required:
