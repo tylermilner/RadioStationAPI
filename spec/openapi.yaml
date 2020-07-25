@@ -24,12 +24,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /login:
+  /authenticate:
     post:
       summary: 'Authenticate with the station (e.g. station manager)'
-      operationId: postLogin
+      operationId: postAuthenticate
       tags:
-
+        - authenticate
+      responses:
+        '200':
+          description: 'Access token that can be used to access protected functions'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/AuthenticationResponse'
 components:
   schemas:
     Config:
