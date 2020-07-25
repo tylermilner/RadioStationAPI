@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Radio Station API
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /config:
+    get:
+      summary: 'Returns details about the current station configuration'
+      operationId: getConfig
+      tags:
+        - config
+      responses:
+        '200':
+          description: 'Details about the station configuration'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Config:
+      type: object
+      properties:
+        streams:
+          type: array
+          items:
+            $ref: '#/components/schemas/StationStream'
+        stationWebsiteURL:
+          type: string
+      required:
+        - streams
+        - stationWebsiteURL
+    StationStream:
+      type: object
+      properties:
+        name:
+          type: string
+        extension:
+          type: string
+        bitrate:
+          type: integer
+        url:
+          type: string
+        qualityScore:
+          type: integer
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
