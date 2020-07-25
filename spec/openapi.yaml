@@ -27,6 +27,9 @@ paths:
   /login:
     post:
       summary: 'Authenticate with the station (e.g. station manager)'
+      operationId: postLogin
+      tags:
+
 components:
   schemas:
     Config:
