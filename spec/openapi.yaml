@@ -7,7 +7,7 @@ servers:
 paths:
   /config:
     get:
-      summary: 'Returns details about the current station configuration'
+      summary: 'Get station configuration info'
       operationId: getConfig
       tags:
         - config
@@ -29,6 +29,8 @@ paths:
       operationId: patchConfig
       tags:
         - config
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -48,12 +50,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /authenticate:
     post:
-      summary: 'Authenticate with the station (e.g. station manager)'
+      summary: 'Authenticate with the station'
       operationId: postAuthenticate
       tags:
         - authenticate
+      security:
+        - APIKeyAuth: []
       requestBody:
         description: 'Authentication credentials'
         required: true
@@ -68,13 +73,92 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationResponse'
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  
+  /now-playing:
+    get:
+      summary: 'Get now playing info'
+      operationId: getNowPlaying
+      tags:
+        - now playing
+      responses:
+        '200':
+          description: 'Now playing info'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NowPlayingInfo'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: 'Update now playing info'
+      operationId: patchNowPlaying
+      tags:
+        - now playing
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 'The updated now playing info'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NowPlayingInfo'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /shows:
+    get:
+      summary: 'Get list of shows'
+      operationId: getShows
+      tags:
+        - shows
+      responses:
+        '200':
+          description: 'Shows'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfShows'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    # TODO: Add remaining CRUD operations for "/shows"
+    
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+    
+    APIKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
   schemas:
     Config:
       type: object
@@ -88,6 +172,7 @@ components:
       required:
         - streams
         - stationWebsiteURL
+
     StationStream:
       type: object
       properties:
@@ -101,18 +186,85 @@ components:
           type: string
         qualityScore:
           type: integer
+      required:
+        - name
+        - extension
+        - bitrate
+        - url
+        - qualityScore
+
     AuthenticationRequest:
       type: object
       properties:
         email:
           type: string
-        password
+        password:
           type: string
+          format: password
       required:
         - email
         - password
+
     AuthenticationResponse:
       type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+
+    NowPlayingInfo:
+      type: object
+      properties:
+        showName:
+          type: string
+        trackTitle:
+          type: string
+        trackArtist:
+          type: string
+    
+    ArrayOfShows:
+      type: array
+      items:
+        $ref: '#/components/schemas/Show'
+    
+    Show:
+      type: object
+      properties:
+        name:
+          type: string
+        facebookURL:
+          type: string
+        twitterURL:
+          type: string
+        websiteURL:
+          type: string
+        imageURL:
+          type: string
+        hosts:
+          type: string
+        location:
+          type: string
+        showTime:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        summary:
+          type: string
+      required:
+        - name
+        - imageURL
+        - hosts
+        - location
+        - showTime
+        - startTime
+        - endTime
+        - summary
+    
     Error:
       type: object
       properties:
