@@ -24,15 +24,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /login:
+    patch:
+      summary: 'Update station configuration info'
+      operationId: patchConfig
+      tags:
+        - config
+      requestBody:
+
+
+  /authenticate:
     post:
       summary: 'Authenticate with the station (e.g. station manager)'
-      operationId: postLogin
+      operationId: postAuthenticate
       tags:
-        - login
+        - authenticate
       responses:
         '200':
           description: 'Access token that can be used to access protected functions'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/AuthenticationResponse'
 components:
   schemas:
     Config:
@@ -60,6 +72,8 @@ components:
           type: string
         qualityScore:
           type: integer
+    AuthenticationResponse:
+      type: object
     Error:
       type: object
       required:
