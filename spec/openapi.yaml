@@ -35,14 +35,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Config'
-
-
+      responses:
+        '200':
+          description: 'The updated station configuration'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /authenticate:
     post:
       summary: 'Authenticate with the station (e.g. station manager)'
       operationId: postAuthenticate
       tags:
         - authenticate
+      requestBody:
+        description: 'Authentication credentials'
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequest'
       responses:
         '200':
           description: 'Access token that can be used to access protected functions'
@@ -50,6 +68,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Config:
@@ -77,16 +101,32 @@ components:
           type: string
         qualityScore:
           type: integer
+      required:
+        - name
+        - extension
+        - bitrate
+        - url
+        - qualityScore
+    AuthenticationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password
+          type: string
+      required:
+        - email
+        - password
     AuthenticationResponse:
       type: object
     Error:
       type: object
-      required:
-        - code
-        - message
       properties:
         code:
           type: integer
           format: int32
         message:
           type: string
+      required:
+        - code
+        - message
