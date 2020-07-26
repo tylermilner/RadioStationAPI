@@ -269,13 +269,17 @@ components:
   responses:
     NotAuthorized:
       description: 'The request is missing proper authorization'
-      schema:
-        $ref: '#/components/schemas/Error'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     
     NotFound:
       description: 'The resource was not found'
-      schema:
-        $ref: '#/components/schemas/Error'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
 
   securitySchemes:
     BearerAuth:
