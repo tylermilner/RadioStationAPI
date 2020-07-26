@@ -29,8 +29,6 @@ paths:
       operationId: patchConfig
       tags:
         - config
-      security:
-        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -50,7 +48,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
   /authenticate:
     post:
       summary: 'Authenticate with the station (e.g. station manager)'
@@ -71,65 +68,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationResponse'
-        '401':
-          description: 'Invalid credentials'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  
-  /now-playing:
-    get:
-      summary: 'Returns now playing info'
-      operationId: getNowPlaying
-      tags:
-        - now playing
-      responses:
-        '200':
-          description: 'Now playing info'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NowPlayingInfo'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    patch:
-      summary: 'Update now playing info'
-      operationId: patchNowPlaying
-      tags:
-        - now playing
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: 'The updated now playing info'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NowPlayingInfo'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
 components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-
   schemas:
     Config:
       type: object
@@ -143,7 +88,6 @@ components:
       required:
         - streams
         - stationWebsiteURL
-
     StationStream:
       type: object
       properties:
@@ -157,42 +101,18 @@ components:
           type: string
         qualityScore:
           type: integer
-      required:
-        - name
-        - extension
-        - bitrate
-        - url
-        - qualityScore
-
     AuthenticationRequest:
       type: object
       properties:
         email:
           type: string
-        password:
+        password
           type: string
       required:
         - email
         - password
-
     AuthenticationResponse:
       type: object
-      properties:
-        token:
-          type: string
-      required:
-        - token
-
-    NowPlayingInfo:
-      type: object
-      properties:
-        showName:
-          type: string
-        trackTitle:
-          type: string
-        trackArtist:
-          type: string
-    
     Error:
       type: object
       properties:
