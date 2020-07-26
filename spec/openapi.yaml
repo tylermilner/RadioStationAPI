@@ -29,6 +29,8 @@ paths:
       operationId: patchConfig
       tags:
         - config
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -68,22 +70,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationResponse'
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
-
-    APIKeyAuth:
-      type: APIKeyAuth
-      in: header
-      name: X-API-KEY
 
   schemas:
     Config:
