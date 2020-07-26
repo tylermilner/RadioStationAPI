@@ -44,6 +44,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Config'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
         default:
           description: Unexpected error
           content:
@@ -112,6 +114,7 @@ paths:
         - now playing
       security:
         - BearerAuth: []
+        - APIKeyAuth: []
       responses:
         '200':
           description: 'The updated now playing info'
@@ -119,6 +122,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NowPlayingInfo'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
         default:
           description: Unexpected error
           content:
@@ -145,10 +150,133 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    
-    # TODO: Add remaining CRUD operations for "/shows"
-    
+    post:
+      summary: 'Create show'
+      operationId: postShows
+      tags:
+        - shows
+      security:
+        - BearerAuth: []
+        - APIKeyAuth: []
+      responses:
+        '201':
+          description: 'The show that was created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Show'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /shows/{id}:
+    get:
+      summary: 'Get show by ID'
+      operationId: getShowById
+      tags:
+        - shows
+      parameters:
+        - name: id
+          in: path
+          description: 'Show ID'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'The specified show'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Show'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: 'Modify show'
+      operationId: patchShow
+      tags:
+        - shows
+      security:
+        - BearerAuth: []
+        - APIKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'Show ID'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'The modified show'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Show'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: 'Delete show'
+      operationId: deleteShow
+      tags:
+        - shows
+      security:
+        - BearerAuth: []
+        - APIKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'Show ID'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 'Show deleted successfully'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
+  responses:
+    NotAuthorized:
+      description: 'The request is missing proper authorization'
+      schema:
+        $ref: '#/components/schemas/Error'
+    
+    NotFound:
+      description: 'The resource was not found'
+      schema:
+        $ref: '#/components/schemas/Error'
+
   securitySchemes:
     BearerAuth:
       type: http
@@ -231,6 +359,9 @@ components:
     Show:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         name:
           type: string
         facebookURL:
@@ -256,6 +387,7 @@ components:
         summary:
           type: string
       required:
+        - id
         - name
         - imageURL
         - hosts
@@ -270,7 +402,7 @@ components:
       properties:
         code:
           type: integer
-          format: int32
+          format: int64
         message:
           type: string
       required:
