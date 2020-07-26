@@ -75,6 +75,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+    APIKeyAuth:
+      type: APIKeyAuth
+      in: header
+      name: X-API-KEY
+
   schemas:
     Config:
       type: object
@@ -88,6 +98,7 @@ components:
       required:
         - streams
         - stationWebsiteURL
+
     StationStream:
       type: object
       properties:
@@ -107,6 +118,7 @@ components:
         - bitrate
         - url
         - qualityScore
+
     AuthenticationRequest:
       type: object
       properties:
@@ -117,6 +129,7 @@ components:
       required:
         - email
         - password
+
     AuthenticationResponse:
       type: object
       properties:
@@ -124,6 +137,7 @@ components:
           type: string
       required:
         - token
+
     Error:
       type: object
       properties:
