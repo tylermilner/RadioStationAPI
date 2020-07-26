@@ -119,6 +119,11 @@ components:
         - password
     AuthenticationResponse:
       type: object
+      properties:
+        token
+          type: string
+      required:
+        - token
     Error:
       type: object
       properties:
