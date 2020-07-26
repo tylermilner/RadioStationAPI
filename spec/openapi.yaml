@@ -29,8 +29,6 @@ paths:
       operationId: patchConfig
       tags:
         - config
-      security:
-        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -44,25 +42,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Config'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
   /authenticate:
     post:
       summary: 'Authenticate with the station (e.g. station manager)'
       operationId: postAuthenticate
       tags:
         - authenticate
-      requestBody:
-        description: 'Authentication credentials'
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AuthenticationRequest'
       responses:
         '200':
           description: 'Access token that can be used to access protected functions'
@@ -70,25 +55,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationResponse'
-        '401':
-          description: 'Invalid credentials'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
 components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-
   schemas:
     Config:
       type: object
@@ -102,7 +69,6 @@ components:
       required:
         - streams
         - stationWebsiteURL
-
     StationStream:
       type: object
       properties:
@@ -116,40 +82,16 @@ components:
           type: string
         qualityScore:
           type: integer
-      required:
-        - name
-        - extension
-        - bitrate
-        - url
-        - qualityScore
-
-    AuthenticationRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        password
-          type: string
-      required:
-        - email
-        - password
-
     AuthenticationResponse:
       type: object
-      properties:
-        token
-          type: string
-      required:
-        - token
-
     Error:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
           type: integer
           format: int32
         message:
           type: string
-      required:
-        - code
-        - message
