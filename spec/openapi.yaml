@@ -30,6 +30,7 @@ paths:
       tags:
         - config
       requestBody:
+        required: true
 
 
   /authenticate:
