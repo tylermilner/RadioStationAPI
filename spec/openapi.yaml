@@ -86,13 +86,33 @@ paths:
   
   /now-playing:
     get:
-      summary: 'Returns now playing details'
+      summary: 'Returns now playing info'
       operationId: getNowPlaying
       tags:
         - now playing
       responses:
         '200':
           description: 'Now playing info'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NowPlayingInfo'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: 'Update now playing info'
+      operationId: patchNowPlaying
+      tags:
+        - now playing
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 'The updated now playing info'
           content:
             application/json:
               schema:
