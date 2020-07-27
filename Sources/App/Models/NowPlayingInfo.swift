@@ -37,7 +37,7 @@ final class NowPlayingInfo: Model {
 
 // MARK: - DTO
 
-struct GetNowPlayingInfo {
+struct GetNowPlayingInfo: Content {
     let showName: String?
     let trackTitle: String?
     let trackArtist: String?

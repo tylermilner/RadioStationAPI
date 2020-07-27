@@ -54,12 +54,12 @@ final class StationStream: Model {
 
 // MARK: - DTO
 
-struct GetStationConfig {
+struct GetStationConfig: Content {
     let streams: [GetStationStream]
     let stationWebsiteURL: String
 }
 
-struct GetStationStream {
+struct GetStationStream: Content {
     let name: String
     let type: String
     let bitrate: Int
