@@ -15,6 +15,14 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
 
     app.migrations.add(CreateTodo())
+    
+    // Create a StationConfig and add it to the database if one doesn't exist
+    let existingStationConfig = try StationConfig.query(on: app.db).first().wait()
+    if existingStationConfig == nil {
+        // TODO: Get station config values from the environment
+        let stationConfig = StationConfig(stationWebsiteURL: "https://github.com/tylermilner/RadioStationAPI")
+        try stationConfig.save(on: app.db).wait()
+    }
 
     // register routes
     try routes(app)

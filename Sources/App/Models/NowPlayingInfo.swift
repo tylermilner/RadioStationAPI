@@ -37,6 +37,7 @@ final class NowPlayingInfo: Model {
 
 // MARK: - DTO
 
+// TODO: Rename these DTOs to be something like "NowPlayingInfoResponse"/"NowPlayingInfoRequest"?
 struct GetNowPlayingInfo: Content {
     let showName: String?
     let trackTitle: String?

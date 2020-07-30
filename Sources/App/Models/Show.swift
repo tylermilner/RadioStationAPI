@@ -69,6 +69,8 @@ final class Show: Model {
 
 // MARK: - DTO
 
+// TODO: We could namespace these as something like `Show.Request` and `Show.Response` (see https://theswiftdev.com/a-generic-crud-solution-for-vapor-4/)
+
 struct GetShow: Content {
     let id: UUID
     let name: String
