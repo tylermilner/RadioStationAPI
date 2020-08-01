@@ -15,14 +15,16 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
 
     app.migrations.add(CreateTodo())
+    app.migrations.add(CreateStationConfig())
     
     // Create a StationConfig and add it to the database if one doesn't exist
-    let existingStationConfig = try StationConfig.query(on: app.db).first().wait()
-    if existingStationConfig == nil {
-        // TODO: Get station config values from the environment
-        let stationConfig = StationConfig(stationWebsiteURL: "https://github.com/tylermilner/RadioStationAPI")
-        try stationConfig.save(on: app.db).wait()
-    }
+    // TODO: Need to find some way to only run this code after the "migrate" command has been run. Maybe I should just store the config in a JSON file inside of the "Public" directory...
+//    let existingStationConfig = try StationConfig.query(on: app.db).first().wait()
+//    if existingStationConfig == nil {
+//        // TODO: Get station config values from the environment
+//        let stationConfig = StationConfig(stationWebsiteURL: "https://github.com/tylermilner/RadioStationAPI")
+//        try stationConfig.save(on: app.db).wait()
+//    }
 
     // register routes
     try routes(app)

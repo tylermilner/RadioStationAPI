@@ -32,13 +32,19 @@ docker ps
 
 You should see the PostgreSQL container running.
 
-**NOTE:** If you encounter a `You have to remove (or rename) that container to be able to reuse that name` error, then you need to first remove the existing docker image using the following command:
+You can stop the container using the following command:
 
 ```bash
-docker rm some-postgres
+docker stop some-postgres
 ```
 
-You can view a list of all started & stopped docker containers using the following command:
+Restart the container using the `docker start` command:
+
+```bash
+docker start some-postgres
+```
+
+You can also view a list of all started & stopped docker containers using the following command:
 
 ```bash
 docker ps -a
@@ -67,4 +73,31 @@ Fatal error: Error raised at top level: server: relation "station_configs" does 
 
 This is because migrations need to be explicitly handled with a Vapor 4 app.
 
-**TODO** Add info on how to handle the migration when running the app.
+In order to perform the migration, you need to run your app with the `migrate` argument. Run the following command to build the app:
+
+```bash
+swift build
+```
+
+Then, run the migration command:
+
+```bash
+swift run Run migrate
+```
+
+That command will likely fail until you've exported your environment variables to your terminal session:
+
+```bash
+export DATABASE_HOST=localhost
+export DATABASE_USERNAME=postgres
+export DATABASE_PASSWORD=mysecretpassword
+export DATABASE_NAME=postgres
+```
+
+Running the `migrate` command should succed this time with the following output:
+
+```bash
+Migration successful
+```
+
+Now you should be able to build & run your app from within Xcode.
