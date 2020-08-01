@@ -3,7 +3,7 @@ info:
   version: 0.0.1
   title: Radio Station API
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://localhost:8080'
 paths:
   /config:
     get:
