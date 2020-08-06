@@ -4,100 +4,98 @@ A simple API for an internet radio station, built using the server-side Swift fr
 
 ## Getting Started
 
-Assuming the following development environment:
+For a barebones development environment setup, you will need the ability to compile & run Swift code as well as spin up Docker containers. Realistically though, you will probably also want the ability to use Xcode as your IDE to develop the app. The following is an example of a recommended development environment setup for Mac:
 
 * macOS 10.15.x
-* Xcode 12.x
-* Docker Desktop
+* Xcode 11.x
+* Docker (via [Docker Desktop app](https://hub.docker.com/editions/community/docker-ce-desktop-mac))
 
-### Running the App
+### Developing in Xcode
 
-Open the `Package.swift` in Xcode to have it automatically pull in the project dependencies (Vapor and other related Swift packages).
+Open the `Package.swift` in Xcode to have it automatically start pulling in the project dependencies (Vapor and other related Swift packages).
 
 #### Starting the PostgreSQL Database
 
-Before building and running, we need to start up a PostgreSQL database that the app can use. You could, of course, install PostgreSQL to your development machine, but that gets kind of messy. A better way is to utilize Docker to run PostgreSQL inside of a continer that your Vapor app can connect to.
+Before building and running, we need to start up a PostgreSQL database that the app can use. You could, of course, install Postgres to your development machine, but that gets kind of messy in my opinion. A better way is to utilize Docker to run Postgres inside of a container that you can start and stop at will. This more closely mirrors how the production deployment setup will work using Docker.
 
-Run the following command to start up a PostgreSQL instance inside of a Docker container, mapping port `5432` inside the container to port `5432` on your local/host machine:
+Use the `docker run` command to start up a Docker container, using the [`postgres` docker image](https://hub.docker.com/_/postgres):
 
 ```bash
-docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres
+docker run --name vapor-postgres -e POSTGRES_USER=vapor_username -e POSTGRES_PASSWORD=vapor_password -e POSTGRES_DB=vapor_database -d -p 5432:5432 postgres
 ```
 
-This should download and start the PostgreSQL container. Verify it's running using the following command:
+A quick rundown on the flags in the above command, in case you're new to Docker (like me):
+
+* `--name`
+    * The name that you want to assign to the container, in this case "vapor-postgres"
+* `-e`
+    * Environment variables passed into the container, in this case we're providing environment variables that match up to the default values used in `configure.swift`
+* `-d`
+    * Start the container in detached mode
+*  `-p`
+    * Maps port `5432` inside of the container to port `5432` on your local/host machine, which allows your Vapor app to connect to the database
+
+Verify the container is running using the `docker ps` command:
 
 ```bash
 docker ps
 ```
 
-You should see the PostgreSQL container running.
+You should see the Postgres container running.
 
-You can stop the container using the following command:
-
-```bash
-docker stop some-postgres
-```
-
-Restart the container using the `docker start` command:
+You can stop the container using the `docker stop` command:
 
 ```bash
-docker start some-postgres
+docker stop vapor-postgres
 ```
 
-You can also view a list of all started & stopped docker containers using the following command:
+Instead of executing the above `docker run` command again (which will result in an error), you can restart the container using the `docker start` command:
+
+```bash
+docker start vapor-postgres
+```
+
+You can also view a list of all started & stopped docker containers using the `-a` flag on the `docker ps` command:
 
 ```bash
 docker ps -a
 ```
 
-**TODO**: How to avoid needing to completely remove the container in the above scenario? Is there a way we can just start up the saved container?
+If you want a fresh start, you can also remove the container using the `docker rm` command:
 
-Once your PostgreSQL docker container is up and running, you should be able to connect to it using a PostgreSQL client like Postico.
+```bash
+docker rm vapor-postgres
+```
+
+This will remove the container and all data stored within its database from your system. You will then need to start up the container again using the `docker run` command.
+
+Once your Postgres docker container is up and running, you should be able to connect to it using a PostgreSQL client like [Postico](https://eggerapps.at/postico/).
 
 #### Running the Vapor App
 
-Before building and running, there's one more thing we need to take care of - setting up environment variables. Set the following environment variables in the project's scheme:
+With your PostgreSQL database running via Docker, you should now be able to build & run your app from within Xcode.
 
-* DATABASE_HOST = localhost
-* DATABASE_USERNAME = postgres
-* DATABASE_PASSWORD = mysecretpassword
-* DATABASE_NAME = postgres
+The app should start just fine, but you will encounter a `relation "relation_name" does not exist (parserOpenTable)"` error when you try to exercise any endpoints that read or write to the database. This is because migrations need to be explicitly handled with a Vapor 4 app.
 
-Now you should be able to build and run the app within Xcode.
-
-When building and running for the first time, the app will immediately crash with the following error:
-
-```
-Fatal error: Error raised at top level: server: relation "station_configs" does not exist (parserOpenTable)
-```
-
-This is because migrations need to be explicitly handled with a Vapor 4 app.
-
-In order to perform the migration, you need to run your app with the `migrate` argument. Run the following command to build the app:
-
-```bash
-swift build
-```
-
-Then, run the migration command:
+Since the Postgres container is a fresh database instance, you first need to run your app with the `migrate` argument so that Vapor/Fluent can create the necessary database tables. Use the `swift run` command to build and run the app (also called "Run") with the `migrate` argument:
 
 ```bash
 swift run Run migrate
 ```
 
-That command will likely fail until you've exported your environment variables to your terminal session:
-
-```bash
-export DATABASE_HOST=localhost
-export DATABASE_USERNAME=postgres
-export DATABASE_PASSWORD=mysecretpassword
-export DATABASE_NAME=postgres
-```
-
-Running the `migrate` command should succed this time with the following output:
+After confirming the migration, the command should succeed with the following output:
 
 ```bash
 Migration successful
 ```
 
-Now you should be able to build & run your app from within Xcode.
+Now you should be able to exercise any of your app's endpoints that connect to the database.
+
+## References
+
+References that have helped me on my server-side Swift journey:
+
+* [Vapor documentation](https://docs.vapor.codes/4.0/)
+* [A generic CRUD solution for Vapor 4](https://theswiftdev.com/a-generic-crud-solution-for-vapor-4/)
+* [Get started with the Fluent ORM framework in Vapor 4](https://theswiftdev.com/get-started-with-the-fluent-orm-framework-in-vapor-4/)
+* [Server side Swift projects inside Docker using Vapor 4](https://theswiftdev.com/server-side-swift-projects-inside-docker-using-vapor-4/)
