@@ -75,22 +75,6 @@ Once your Postgres docker container is up and running, you should be able to con
 
 With your PostgreSQL database running via Docker, you should now be able to build & run your app from within Xcode.
 
-The app should start just fine, but you will encounter a `relation "relation_name" does not exist (parserOpenTable)"` error when you try to exercise any endpoints that read or write to the database. This is because migrations need to be explicitly handled with a Vapor 4 app.
-
-Since the Postgres container is a fresh database instance, you first need to run your app with the `migrate` argument so that Vapor/Fluent can create the necessary database tables. Use the `swift run` command to build and run the app (also called "Run") with the `migrate` argument:
-
-```bash
-swift run Run migrate
-```
-
-After confirming the migration, the command should succeed with the following output:
-
-```bash
-Migration successful
-```
-
-Now you should be able to exercise any of your app's endpoints that connect to the database.
-
 ## References
 
 References that have helped me on my server-side Swift journey:
