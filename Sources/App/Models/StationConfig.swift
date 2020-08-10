@@ -56,7 +56,7 @@ final class StationStream: Model {
 
 extension StationConfig {
     
-    func patch(with patch: PatchStationConfig) {
+    func patch(with patch: StationConfig.Update) {
         // TODO: Implement 'streams' property once relationships are setup
         stationWebsiteURL = patch.stationWebsiteURL ?? stationWebsiteURL
     }
@@ -64,28 +64,25 @@ extension StationConfig {
 
 // MARK: - DTO
 
-struct GetStationConfig: Content {
-    let streams: [GetStationStream]
-    let stationWebsiteURL: String
-}
-
-struct GetStationStream: Content {
-    let name: String
-    let type: String
-    let bitrate: Int
-    let url: String
-    let qualityScore: Int
-}
-
-struct PatchStationConfig: Content {
-    // TODO: Implement PATCH for 'streams' property
-    let stationWebsiteURL: String?
-}
-
 extension StationConfig {
     
-    var responseDTO: GetStationConfig {
+    struct Create: Content {
+        let stationWebsiteURL: String
         // TODO: Implement 'streams' property once relationships are setup
-        return GetStationConfig(streams: [], stationWebsiteURL: stationWebsiteURL)
+    }
+    
+    struct Get: Content {
+        // TODO: Implement 'streams' property once relationships are setup
+        var stationWebsiteURL: String
+    }
+    
+    struct Update: Content {
+        // TODO: Implement 'streams' property once relationships are setup
+        let stationWebsiteURL: String?
+    }
+    
+    var responseDTO: Get {
+        // TODO: Implement 'streams' property once relationships are setup
+        return Get(stationWebsiteURL: stationWebsiteURL)
     }
 }

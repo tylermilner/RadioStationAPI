@@ -13,22 +13,21 @@ import Vapor
 struct StationConfigController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
-        // TODO: Test these routes to make sure they actually work...
         routes.group("config") { config in
             config.get(use: index)
             config.patch(use: update)
         }
     }
     
-    func index(req: Request) throws -> EventLoopFuture<GetStationConfig> {
+    func index(req: Request) throws -> EventLoopFuture<StationConfig.Get> {
         return StationConfig.query(on: req.db)
             .first()
             .unwrap(or: Abort(.internalServerError))
             .map { $0.responseDTO }
     }
     
-    func update(req: Request) throws -> EventLoopFuture<GetStationConfig> {
-        let patch = try req.content.decode(PatchStationConfig.self)
+    func update(req: Request) throws -> EventLoopFuture<StationConfig.Get> {
+        let patch = try req.content.decode(StationConfig.Update.self)
         return StationConfig.query(on: req.db)
             .first()
             .unwrap(or: Abort(.internalServerError))
