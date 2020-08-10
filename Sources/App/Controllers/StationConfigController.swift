@@ -15,6 +15,7 @@ struct StationConfigController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.group("config") { config in
             config.get(use: index)
+            config.post(use: create)
             config.patch(use: update)
         }
     }
@@ -24,6 +25,13 @@ struct StationConfigController: RouteCollection {
             .first()
             .unwrap(or: Abort(.internalServerError))
             .map { $0.responseDTO }
+    }
+    
+    func create(req: Request) throws -> EventLoopFuture<StationConfig.Get> {
+        let input = try req.content.decode(StationConfig.Create.self)
+        let stationConfig = StationConfig(input: input)
+        return stationConfig.save(on: req.db)
+            .map { stationConfig.responseDTO }
     }
     
     func update(req: Request) throws -> EventLoopFuture<StationConfig.Get> {

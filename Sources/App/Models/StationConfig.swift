@@ -81,6 +81,13 @@ extension StationConfig {
         let stationWebsiteURL: String?
     }
     
+    convenience init(input: Create) {
+        self.init()
+        
+        // TODO: Implement 'streams' property once relationships are setup
+        self.stationWebsiteURL = input.stationWebsiteURL
+    }
+    
     var responseDTO: Get {
         // TODO: Implement 'streams' property once relationships are setup
         return Get(stationWebsiteURL: stationWebsiteURL)
