@@ -16,7 +16,7 @@ Open the `Package.swift` in Xcode to have it automatically start pulling in the 
 
 #### Starting the PostgreSQL Database
 
-Before building and running, we need to start up a PostgreSQL database that the app can use. You could, of course, install Postgres to your development machine, but that gets kind of messy in my opinion. A better way is to utilize Docker to run Postgres inside of a container that you can start and stop at will. This more closely mirrors how the production deployment setup will work using Docker.
+Before building and running, we need to start up a PostgreSQL database that the app can use. You could, of course, install Postgres to your development machine, but that gets kind of messy in my opinion. A better way is to utilize Docker to run Postgres inside of a container that you can start and stop at will. This more closely mirrors how the production deployment setup will work using Docker and helps to avoid problems you might encounter when working on multiple apps at a time.
 
 Use the `docker run` command to start up a Docker container, using the [`postgres` docker image](https://hub.docker.com/_/postgres):
 
@@ -83,3 +83,5 @@ References that have helped me on my server-side Swift journey:
 * [A generic CRUD solution for Vapor 4](https://theswiftdev.com/a-generic-crud-solution-for-vapor-4/)
 * [Get started with the Fluent ORM framework in Vapor 4](https://theswiftdev.com/get-started-with-the-fluent-orm-framework-in-vapor-4/)
 * [Server side Swift projects inside Docker using Vapor 4](https://theswiftdev.com/server-side-swift-projects-inside-docker-using-vapor-4/)
+* [How to Build a To-Do List Back End With Vapor 4 and Swift](https://medium.com/better-programming/vapor-4-todo-backend-5035c9d7e295)
+* [How to do integration testing on a Vapor server](https://losingfight.com/blog/2018/12/16/how-to-do-integration-testing-on-a-vapor-server/)
