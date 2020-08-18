@@ -29,21 +29,20 @@ struct StationConfigController: RouteCollection {
     
     func create(req: Request) throws -> EventLoopFuture<StationConfig.Get> {
         let input = try req.content.decode(StationConfig.Create.self)
-        let stationConfig = StationConfig(input: input)
-        return stationConfig.save(on: req.db)
-            .map { stationConfig.responseDTO }
         
-        // TODO: WIP logic to allow only 1 StationConfig to be created
-//        return StationConfig.query(on: req.db)
-//            .all()
-//            .guard( { $0.isEmpty }, else: Abort(.badRequest))
-//            .flatMapThrowing { _ in
-//                let input = try req.content.decode(StationConfig.Create.self)
-//                let stationConfig = StationConfig(input: input)
-//
-//                return stationConfig.save(on: req.db)
-//                    .flatMap { stationConfig.responseDTO }
-//        }
+        var stationConfig: StationConfig?
+        
+        return StationConfig.query(on: req.db)
+            .all()
+            .guard( { $0.isEmpty }, else: Abort(.badRequest))
+            .flatMap { _ in
+                let config = StationConfig(input: input)
+                stationConfig = config
+                
+                return config.save(on: req.db)
+            }
+            .map { stationConfig?.responseDTO }
+            .unwrap(or: Abort(.internalServerError))
     }
     
     func update(req: Request) throws -> EventLoopFuture<StationConfig.Get> {

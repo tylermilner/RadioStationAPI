@@ -44,6 +44,12 @@ class StationConfigControllerTests: AppXCTestCase {
             XCTAssertContent(StationConfig.Get.self, res) { config in
                 XCTAssertEqual(config.stationWebsiteURL, configBody.stationWebsiteURL)
             }
+            
+            let databaseConfigs = try StationConfig.query(on: app.db).all().wait()
+            XCTAssertEqual(databaseConfigs.count, 1)
+            
+            let config = try XCTUnwrap(databaseConfigs.first)
+            XCTAssertEqual(config.stationWebsiteURL, configBody.stationWebsiteURL)
         })
     }
     
