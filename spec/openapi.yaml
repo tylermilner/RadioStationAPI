@@ -3,7 +3,7 @@ info:
   version: 0.0.1
   title: Radio Station API
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://localhost:8080'
 paths:
   /config:
     get:
@@ -187,6 +187,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '200':
           description: 'The specified show'
@@ -217,6 +218,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '200':
           description: 'The modified show'
@@ -249,6 +251,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '204':
           description: 'Show deleted successfully'
@@ -308,7 +311,7 @@ components:
       properties:
         name:
           type: string
-        type:
+        extension:
           type: string
         bitrate:
           type: integer
@@ -318,7 +321,7 @@ components:
           type: integer
       required:
         - name
-        - type
+        - extension
         - bitrate
         - url
         - qualityScore
@@ -363,6 +366,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
         name:
           type: string
         facebookURL:
