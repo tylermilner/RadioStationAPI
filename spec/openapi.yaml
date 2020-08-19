@@ -31,7 +31,6 @@ paths:
         - config
       security:
         - BearerAuth: []
-        - APIKeyAuth: []
       requestBody:
         required: true
         content:
@@ -115,7 +114,6 @@ paths:
         - now playing
       security:
         - BearerAuth: []
-        - APIKeyAuth: []
       responses:
         '200':
           description: 'The updated now playing info'
@@ -158,7 +156,6 @@ paths:
         - shows
       security:
         - BearerAuth: []
-        - APIKeyAuth: []
       responses:
         '201':
           description: 'The show that was created'
@@ -210,7 +207,6 @@ paths:
         - shows
       security:
         - BearerAuth: []
-        - APIKeyAuth: []
       parameters:
         - name: id
           in: path
@@ -243,7 +239,6 @@ paths:
         - shows
       security:
         - BearerAuth: []
-        - APIKeyAuth: []
       parameters:
         - name: id
           in: path
