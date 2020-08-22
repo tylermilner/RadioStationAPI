@@ -3,30 +3,32 @@ info:
   version: 0.0.1
   title: Radio Station API
 servers:
-  - url: 'http://localhost:8080'
+  - url: "http://localhost:8080"
 paths:
   /config:
     get:
-      summary: 'Get station configuration info'
+      summary: "Get station configuration info"
       operationId: getConfig
       tags:
         - config
       responses:
-        '200':
-          description: 'Details about the station configuration'
+        "200":
+          description: "Details about the station configuration"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Config'
-        default:
-          description: Unexpected error
+                $ref: "#/components/schemas/Config"
+        "404":
+          description: "No station configuration exists. Create one by issuing a POST."
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    patch:
-      summary: 'Update station configuration info'
-      operationId: patchConfig
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      summary: "Create station configuration info"
+      operationId: postConfig
       tags:
         - config
       security:
@@ -38,170 +40,208 @@ paths:
             schema:
               $ref: '#/components/schemas/Config'
       responses:
-        '200':
-          description: 'The updated station configuration'
+        "200":
+          description: "The station configuration that was created"
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Config'
-        '401':
-          $ref: '#/components/responses/NotAuthorized'
-        default:
-          description: Unexpected error
+        "400":
+          description: "Either a station configuration already exists or there was a problem with the format of the request. Check the error for details."
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    patch:
+      summary: "Update station configuration info"
+      operationId: patchConfig
+      tags:
+        - config
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Config"
+      responses:
+        "200":
+          description: "The updated station configuration"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Config"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /authenticate:
     post:
-      summary: 'Authenticate with the station'
+      summary: "Authenticate with the station"
       operationId: postAuthenticate
       tags:
         - authenticate
       security:
         - APIKeyAuth: []
       requestBody:
-        description: 'Authentication credentials'
+        description: "Authentication credentials"
         required: true
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AuthenticationRequest'
+              $ref: "#/components/schemas/AuthenticationRequest"
       responses:
-        '200':
-          description: 'Access token that can be used to access protected functions'
+        "200":
+          description: "Access token that can be used to access protected functions"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthenticationResponse'
-        '401':
-          description: 'Invalid credentials'
+                $ref: "#/components/schemas/AuthenticationResponse"
+        "401":
+          description: "Invalid credentials"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   
   /now-playing:
     get:
-      summary: 'Get now playing info'
+      summary: "Get now playing info"
       operationId: getNowPlaying
       tags:
         - now playing
       responses:
-        '200':
-          description: 'Now playing info'
+        "200":
+          description: "Now playing info"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NowPlayingInfo"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      summary: "Create now playing info"
+      operationId: postNowPlaying
+      tags:
+        - now playing
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NowPlayingInfo'
+      responses:
+        "200":
+          description: "Now playing info that was created"
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NowPlayingInfo'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     patch:
-      summary: 'Update now playing info'
+      summary: "Update now playing info"
       operationId: patchNowPlaying
       tags:
         - now playing
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NowPlayingInfo'
       responses:
-        '200':
-          description: 'The updated now playing info'
+        "200":
+          description: "The updated now playing info"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NowPlayingInfo'
-        '401':
-          $ref: '#/components/responses/NotAuthorized'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/NowPlayingInfo"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /shows:
     get:
-      summary: 'Get list of shows'
+      summary: "Get list of shows"
       operationId: getShows
       tags:
         - shows
       responses:
-        '200':
-          description: 'Shows'
+        "200":
+          description: "Shows"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfShows'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ArrayOfShows"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     post:
-      summary: 'Create show'
+      summary: "Create show"
       operationId: postShows
       tags:
         - shows
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Show'
       responses:
-        '201':
-          description: 'The show that was created'
+        "201":
+          description: "The show that was created"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Show'
-        '401':
-          $ref: '#/components/responses/NotAuthorized'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Show"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /shows/{id}:
     get:
-      summary: 'Get show by ID'
+      summary: "Get show by ID"
       operationId: getShowById
       tags:
         - shows
       parameters:
         - name: id
           in: path
-          description: 'Show ID'
+          description: "Show ID"
           required: true
           schema:
             type: integer
             format: int64
       responses:
-        '200':
-          description: 'The specified show'
+        "200":
+          description: "The specified show"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Show'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Show"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     patch:
-      summary: 'Modify show'
+      summary: "Modify show"
       operationId: patchShow
       tags:
         - shows
@@ -210,30 +250,32 @@ paths:
       parameters:
         - name: id
           in: path
-          description: 'Show ID'
+          description: "Show ID"
           required: true
           schema:
             type: integer
             format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Show'
       responses:
-        '200':
-          description: 'The modified show'
+        "200":
+          description: "The modified show"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Show'
-        '401':
-          $ref: '#/components/responses/NotAuthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Show"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     delete:
-      summary: 'Delete show'
+      summary: "Delete show"
       operationId: deleteShow
       tags:
         - shows
@@ -242,40 +284,44 @@ paths:
       parameters:
         - name: id
           in: path
-          description: 'Show ID'
+          description: "Show ID"
           required: true
           schema:
             type: integer
             format: int64
       responses:
-        '204':
-          description: 'Show deleted successfully'
-        '401':
-          $ref: '#/components/responses/NotAuthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        "204":
+          description: "Show deleted successfully"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   responses:
     NotAuthorized:
-      description: 'The request is missing proper authorization'
+      description: "The request is missing proper authorization"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
     
     NotFound:
-      description: 'The resource was not found'
+      description: "The resource was not found"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
+            
+    InternalServerError:
+      description: "An unexpected error occurred"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+      
 
   securitySchemes:
     BearerAuth:
@@ -294,7 +340,7 @@ components:
         streams:
           type: array
           items:
-            $ref: '#/components/schemas/StationStream'
+            $ref: "#/components/schemas/StationStream"
         stationWebsiteURL:
           type: string
       required:
@@ -354,7 +400,7 @@ components:
     ArrayOfShows:
       type: array
       items:
-        $ref: '#/components/schemas/Show'
+        $ref: "#/components/schemas/Show"
     
     Show:
       type: object
