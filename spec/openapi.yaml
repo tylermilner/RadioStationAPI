@@ -112,70 +112,6 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
   
-  /now-playing:
-    get:
-      summary: "Get now playing info"
-      operationId: getNowPlaying
-      tags:
-        - now playing
-      responses:
-        "200":
-          description: "Now playing info"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NowPlayingInfo"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-    post:
-      summary: "Create now playing info"
-      operationId: postNowPlaying
-      tags:
-        - now playing
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NowPlayingInfo'
-      responses:
-        "200":
-          description: "Now playing info that was created"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NowPlayingInfo'
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-    patch:
-      summary: "Update now playing info"
-      operationId: patchNowPlaying
-      tags:
-        - now playing
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NowPlayingInfo'
-      responses:
-        "200":
-          description: "The updated now playing info"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NowPlayingInfo"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
   /shows:
     get:
       summary: "Get list of shows"
@@ -386,16 +322,6 @@ components:
           type: string
       required:
         - token
-
-    NowPlayingInfo:
-      type: object
-      properties:
-        showName:
-          type: string
-        trackTitle:
-          type: string
-        trackArtist:
-          type: string
     
     ArrayOfShows:
       type: array
