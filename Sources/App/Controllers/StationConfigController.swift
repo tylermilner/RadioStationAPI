@@ -8,8 +8,6 @@
 import Fluent
 import Vapor
 
-// TODO: Create controllers for remaining models
-
 struct StationConfigController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {

@@ -67,35 +67,89 @@ final class Show: Model {
     }
 }
 
-// MARK: - DTO
+// MARK: - PATCH
 
-// TODO: We could namespace these as something like `Show.Request` and `Show.Response` (see https://theswiftdev.com/a-generic-crud-solution-for-vapor-4/)
-
-struct GetShow: Content {
-    let id: UUID
-    let name: String
-    let facebookURL: String?
-    let twitterURL: String?
-    let websiteURL: String?
-    let imageURL: String
-    let hosts: String
-    let location: String
-    let showTime: String
-    let startTime: String
-    let endTime: String
-    let summary: String
+extension Show {
+    
+    func patch(with patch: Show.Update) {
+        name = patch.name ?? name
+        facebookURL = patch.facebookURL ?? facebookURL
+        twitterURL = patch.twitterURL ?? twitterURL
+        websiteURL = patch.websiteURL ?? websiteURL
+        imageURL = patch.imageURL ?? imageURL
+        hosts = patch.hosts ?? hosts
+        location = patch.location ?? location
+        showTime = patch.showTime ?? showTime
+        startTime = patch.startTime ?? startTime
+        endTime = patch.endTime ?? endTime
+        summary = patch.summary ?? summary
+    }
 }
 
-struct CreateShow: Content {
-    let name: String
-    let facebookURL: String?
-    let twitterURL: String?
-    let websiteURL: String?
-    let imageURL: String
-    let hosts: String
-    let location: String
-    let showTime: String
-    let startTime: String
-    let endTime: String
-    let summary: String
+// MARK: - DTO
+
+extension Show {
+    
+    struct Create: Content {
+        let name: String
+        let facebookURL: String?
+        let twitterURL: String?
+        let websiteURL: String?
+        let imageURL: String
+        let hosts: String
+        let location: String
+        let showTime: String
+        let startTime: String
+        let endTime: String
+        let summary: String
+    }
+    
+    struct Get: Content {
+        let id: UUID
+        let name: String
+        let facebookURL: String?
+        let twitterURL: String?
+        let websiteURL: String?
+        let imageURL: String
+        let hosts: String
+        let location: String
+        let showTime: String
+        let startTime: String
+        let endTime: String
+        let summary: String
+    }
+    
+    struct Update: Content {
+        let name: String?
+        let facebookURL: String?
+        let twitterURL: String?
+        let websiteURL: String?
+        let imageURL: String?
+        let hosts: String?
+        let location: String?
+        let showTime: String?
+        let startTime: String?
+        let endTime: String?
+        let summary: String?
+    }
+    
+    convenience init(input: Create) {
+        self.init()
+        
+        self.name = input.name
+        self.facebookURL = input.facebookURL
+        self.twitterURL = input.twitterURL
+        self.websiteURL = input.websiteURL
+        self.imageURL = input.imageURL
+        self.hosts = input.hosts
+        self.location = input.location
+        self.showTime = input.showTime
+        self.startTime = input.startTime
+        self.endTime = input.endTime
+        self.summary = input.summary
+    }
+    
+    var responseDTO: Get {
+        return Get(id: id!, name: name, facebookURL: facebookURL, twitterURL: twitterURL, websiteURL: websiteURL, imageURL: imageURL, hosts: hosts, location: location, showTime: showTime, startTime: startTime, endTime: endTime, summary: summary)
+    }
 }
