@@ -43,3 +43,26 @@ struct GetNowPlayingInfo: Content {
     let trackTitle: String?
     let trackArtist: String?
 }
+
+extension NowPlayingInfo {
+    
+    struct Create: Content {
+        
+    }
+    
+    struct Get: Content {
+        
+    }
+    
+    struct Update: Content {
+        
+    }
+    
+    convenience init(input: Create) {
+        self.init()
+    }
+    
+    var responseDTO: Get {
+        return Get()
+    }
+}
