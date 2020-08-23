@@ -26,7 +26,6 @@ class AppXCTestCase: XCTestCase {
         // Use in-memory SQLite database for testing
         app.databases.use(.sqlite(.memory), as: .test, isDefault: true)
         
-        app.migrations.add(CreateTodo())
         app.migrations.add(CreateStationConfig())
         app.migrations.add(CreateShow())
         try app.autoMigrate().wait()
