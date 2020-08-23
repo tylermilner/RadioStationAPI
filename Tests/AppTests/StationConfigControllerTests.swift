@@ -12,21 +12,21 @@ class StationConfigControllerTests: AppXCTestCase {
     
     // MARK: - Properties
     
-    private let configPath = "config"
+    private let config = "config"
     
     // MARK: - Tests
     
     func test_getStationConfig_returnsConfig() throws {
         // Arrange
-        let seedConfig = StationConfig(stationWebsiteURL: "https://test.com")
-        try seedConfig.save(on: app.db).wait()
+        let seed = StationConfig(stationWebsiteURL: "https://test.com")
+        try seed.save(on: app.db).wait()
         
         // Act
-        try app.test(.GET, configPath) { res in
+        try app.test(.GET, config) { res in
             
             // Assert
             XCTAssertContent(StationConfig.Get.self, res) { config in
-                XCTAssertEqual(config.stationWebsiteURL, seedConfig.stationWebsiteURL)
+                XCTAssertEqual(config.stationWebsiteURL, seed.stationWebsiteURL)
             }
         }
     }
@@ -36,7 +36,7 @@ class StationConfigControllerTests: AppXCTestCase {
         let configBody = StationConfig.Create(stationWebsiteURL: "https://test.com")
         
         // Act
-        try app.test(.POST, configPath, beforeRequest: { req in
+        try app.test(.POST, config, beforeRequest: { req in
             try req.content.encode(configBody)
         }, afterResponse: { res in
             
@@ -55,13 +55,13 @@ class StationConfigControllerTests: AppXCTestCase {
     
     func test_postStationConfig_abortsIfConfigAlreadyExists() throws {
         // Arrange
-        let seedConfig = StationConfig(stationWebsiteURL: "https://test.com")
-        try seedConfig.save(on: app.db).wait()
+        let seed = StationConfig(stationWebsiteURL: "https://test.com")
+        try seed.save(on: app.db).wait()
         
         let configBody = StationConfig.Create(stationWebsiteURL: "https://test.com")
         
         // Act
-        try app.test(.POST, configPath, beforeRequest: { req in
+        try app.test(.POST, config, beforeRequest: { req in
             try req.content.encode(configBody)
         }, afterResponse: { res in
             
@@ -72,25 +72,29 @@ class StationConfigControllerTests: AppXCTestCase {
             XCTAssertEqual(databaseConfigs.count, 1)
             
             let config = try XCTUnwrap(databaseConfigs.first)
-            XCTAssertEqual(config.stationWebsiteURL, seedConfig.stationWebsiteURL)
+            XCTAssertEqual(config.stationWebsiteURL, seed.stationWebsiteURL)
         })
     }
     
     func test_patchStationConfig_updatesConfig() throws {
         // Arrange
-        let seedConfig = StationConfig(stationWebsiteURL: "https://test.com")
-        try seedConfig.save(on: app.db).wait()
+        let seed = StationConfig(stationWebsiteURL: "https://test.com")
+        try seed.save(on: app.db).wait()
+        let seedId = try XCTUnwrap(seed.id)
         
         let configBody = StationConfig.Update(stationWebsiteURL: "https://update.test.com")
         
         // Act
-        try app.test(.PATCH, configPath, beforeRequest: { req in
+        try app.test(.PATCH, config, beforeRequest: { req in
             try req.content.encode(configBody)
         }, afterResponse: { res in
             
             // Assert
-            XCTAssertContent(StationConfig.Get.self, res) { config in
+            try XCTAssertContent(StationConfig.Get.self, res) { config in
                 XCTAssertEqual(config.stationWebsiteURL, configBody.stationWebsiteURL)
+                
+                let updatedConfig = try StationConfig.find(seedId, on: app.db).wait()
+                XCTAssertEqual(updatedConfig?.stationWebsiteURL, configBody.stationWebsiteURL)
             }
         })
     }

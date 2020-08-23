@@ -18,6 +18,7 @@ struct ShowController: RouteCollection {
             shows.group(":id") { show in
                 show.get(use: index)
                 show.patch(use: update)
+                show.delete(use: delete)
             }
         }
     }
@@ -54,6 +55,6 @@ struct ShowController: RouteCollection {
         return Show.find(req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
-            .transform(to: .ok)
+            .transform(to: .noContent)
     }
 }

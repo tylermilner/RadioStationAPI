@@ -13,7 +13,7 @@ struct CreateStationConfig: Migration {
         return database.schema(StationConfig.schema)
             .id()
             // TODO: Implement 'streams' property once relationships are setup
-            .field("station_website_url", .string, .required) // TODO: Find better way to manage "stringly" typed nature of database field keys
+            .field(StationConfig.Key.stationWebsiteURL, .string, .required)
             .create()
     }
 

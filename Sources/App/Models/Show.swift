@@ -16,37 +16,37 @@ final class Show: Model {
     @ID(key: .id)
     var id: UUID?
     
-    @Field(key: "name")
+    @Field(key: Key.name)
     var name: String
     
-    @Field(key: "facebook_url")
+    @Field(key: Key.facebookURL)
     var facebookURL: String?
     
-    @Field(key: "twitter_url")
+    @Field(key: Key.twitterURL)
     var twitterURL: String?
     
-    @Field(key: "website_url")
+    @Field(key: Key.websiteURL)
     var websiteURL: String?
     
-    @Field(key: "image_url")
+    @Field(key: Key.imageURL)
     var imageURL: String
     
-    @Field(key: "hosts")
+    @Field(key: Key.hosts)
     var hosts: String
     
-    @Field(key: "location")
+    @Field(key: Key.location)
     var location: String
     
-    @Field(key: "show_time")
+    @Field(key: Key.showTime)
     var showTime: String
     
-    @Field(key: "start_time")
+    @Field(key: Key.startTime)
     var startTime: String
     
-    @Field(key: "end_time")
+    @Field(key: Key.endTime)
     var endTime: String
     
-    @Field(key: "summary")
+    @Field(key: Key.summary)
     var summary: String
     
     init() { }
@@ -64,6 +64,23 @@ final class Show: Model {
         self.startTime = startTime
         self.endTime = endTime
         self.summary = summary
+    }
+}
+
+extension Show {
+    
+    enum Key {
+        static let name = FieldKey("name")
+        static let facebookURL = FieldKey("facebook_url")
+        static let twitterURL = FieldKey("twitter_url")
+        static let websiteURL = FieldKey("website_url")
+        static let imageURL = FieldKey("image_url")
+        static let hosts = FieldKey("hosts")
+        static let location = FieldKey("location")
+        static let showTime = FieldKey("show_time")
+        static let startTime = FieldKey("start_time")
+        static let endTime = FieldKey("end_time")
+        static let summary = FieldKey("summary")
     }
 }
 
@@ -90,7 +107,7 @@ extension Show {
 
 extension Show {
     
-    struct Create: Content {
+    struct Create: Content, Equatable {
         let name: String
         let facebookURL: String?
         let twitterURL: String?
@@ -104,7 +121,7 @@ extension Show {
         let summary: String
     }
     
-    struct Get: Content {
+    struct Get: Content, Equatable {
         let id: UUID
         let name: String
         let facebookURL: String?
@@ -119,7 +136,7 @@ extension Show {
         let summary: String
     }
     
-    struct Update: Content {
+    struct Update: Content, Equatable {
         let name: String?
         let facebookURL: String?
         let twitterURL: String?

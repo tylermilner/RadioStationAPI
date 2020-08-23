@@ -28,6 +28,7 @@ class AppXCTestCase: XCTestCase {
         
         app.migrations.add(CreateTodo())
         app.migrations.add(CreateStationConfig())
+        app.migrations.add(CreateShow())
         try app.autoMigrate().wait()
         
         try routes(app)
