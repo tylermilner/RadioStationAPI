@@ -21,7 +21,7 @@ struct StationConfigController: RouteCollection {
     func index(req: Request) throws -> EventLoopFuture<StationConfig.Get> {
         return StationConfig.query(on: req.db)
             .first()
-            .unwrap(or: Abort(.internalServerError))
+            .unwrap(or: Abort(.notFound))
             .map { $0.responseDTO }
     }
     
@@ -47,7 +47,7 @@ struct StationConfigController: RouteCollection {
         let patch = try req.content.decode(StationConfig.Update.self)
         return StationConfig.query(on: req.db)
             .first()
-            .unwrap(or: Abort(.internalServerError))
+            .unwrap(or: Abort(.notFound))
             .flatMap { stationConfig in
                 stationConfig.patch(with: patch)
                 return stationConfig.update(on: req.db)
