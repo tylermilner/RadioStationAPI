@@ -19,7 +19,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Config"
         "404":
-          description: "No station configuration exists. Create one by issuing a POST."
+          description: "No station configuration exists. Create one first."
           content:
             application/json:
               schema:
@@ -78,6 +78,12 @@ paths:
                 $ref: "#/components/schemas/Config"
         "401":
           $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: "No station configuration exists. Create one first."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -279,6 +285,8 @@ components:
             $ref: "#/components/schemas/StationStream"
         stationWebsiteURL:
           type: string
+          description: "The station's website URL"
+          example: "https://example.com"
       required:
         - streams
         - stationWebsiteURL
@@ -288,17 +296,27 @@ components:
       properties:
         name:
           type: string
-        extension:
+          description: "The name of the stream"
+          example: "MP3 (high bitrate)"
+        format:
           type: string
+          description: "The stream's format"
+          example: "MP3"
         bitrate:
           type: integer
+          description: "The stream's bitrate, in bits per second"
+          example: 192000
         url:
           type: string
+          description: "The stream's URL"
+          example: "https://streams.example.com:9000"
         qualityScore:
           type: integer
+          description: "The stream's relative quality score, from 1-100."
+          example: 100
       required:
         - name
-        - extension
+        - format
         - bitrate
         - url
         - qualityScore
@@ -306,13 +324,17 @@ components:
     AuthenticationRequest:
       type: object
       properties:
-        email:
+        username:
           type: string
+          description: "The user's username"
+          example: "admin"
         password:
           type: string
           format: password
+          description: "The user's password"
+          example: "password"
       required:
-        - email
+        - username
         - password
 
     AuthenticationResponse:
@@ -320,6 +342,8 @@ components:
       properties:
         token:
           type: string
+          description: "The token to be used for 'Bearer' authentication in future requests"
+          example: "abc123"
       required:
         - token
     
@@ -334,30 +358,54 @@ components:
         id:
           type: integer
           format: int64
+          description: "The show's identifier"
+          example: 1
         name:
           type: string
+          description: "The show's name"
+          example: "Wobbly Wednesday"
         facebookURL:
           type: string
+          description: "The show's Facebook URL, if available"
+          example: "https://facebook.com/wobblywednesday"
         twitterURL:
           type: string
+          description: "The show's Twitter URL, if available"
+          example: "https://twitter.com/wobblywednesday"
         websiteURL:
           type: string
+          description: "The show's website"
+          example: "https://wobblywednesday.com"
         imageURL:
           type: string
+          description: "The show's image"
+          example: "https://example.com/show-image.jpg"
         hosts:
           type: string
+          description: "The show's hosts"
+          example: "Tmart and Tmil"
         location:
           type: string
+          description: "The show's location"
+          example: "Texas, USA"
         showTime:
           type: string
+          description: "The day of the week when the show goes live"
+          example: "WEDNESDAY"
         startTime:
           type: string
           format: date-time
+          description: "The time that the show goes on-air"
+          example: "2020-08-26T00:00:00+00:00"
         endTime:
           type: string
           format: date-time
+          description: "The time that the show goes off-air"
+          example: "2020-08-26T02:00:00+00:00"
         summary:
           type: string
+          description: "The show's summary"
+          example: "Turn up the bass for 2 hours of house-shaking bass music!"
       required:
         - id
         - name
