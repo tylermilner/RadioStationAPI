@@ -19,7 +19,7 @@ final class StationConfig: Model {
     // TODO: Setup relationship for StationConfig <--> StationStream
 //    var streams: [StationStream]
     
-    @Field(key: Key.stationWebsiteURL)
+    @Field(key: FieldKeys.stationWebsiteURL)
     var stationWebsiteURL: String
     
     init() { }
@@ -32,8 +32,8 @@ final class StationConfig: Model {
 
 extension StationConfig {
     
-    enum Key {
-        static let stationWebsiteURL = FieldKey("station_website_url")
+    enum FieldKeys {
+        static let stationWebsiteURL: FieldKey = "station_website_url"
     }
 }
 

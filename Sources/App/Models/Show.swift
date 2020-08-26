@@ -16,37 +16,37 @@ final class Show: Model {
     @ID(key: .id)
     var id: UUID?
     
-    @Field(key: Key.name)
+    @Field(key: FieldKeys.name)
     var name: String
     
-    @Field(key: Key.facebookURL)
+    @Field(key: FieldKeys.facebookURL)
     var facebookURL: String?
     
-    @Field(key: Key.twitterURL)
+    @Field(key: FieldKeys.twitterURL)
     var twitterURL: String?
     
-    @Field(key: Key.websiteURL)
+    @Field(key: FieldKeys.websiteURL)
     var websiteURL: String?
     
-    @Field(key: Key.imageURL)
+    @Field(key: FieldKeys.imageURL)
     var imageURL: String
     
-    @Field(key: Key.hosts)
+    @Field(key: FieldKeys.hosts)
     var hosts: String
     
-    @Field(key: Key.location)
+    @Field(key: FieldKeys.location)
     var location: String
     
-    @Field(key: Key.showTime)
+    @Field(key: FieldKeys.showTime)
     var showTime: String
     
-    @Field(key: Key.startTime)
+    @Field(key: FieldKeys.startTime)
     var startTime: String
     
-    @Field(key: Key.endTime)
+    @Field(key: FieldKeys.endTime)
     var endTime: String
     
-    @Field(key: Key.summary)
+    @Field(key: FieldKeys.summary)
     var summary: String
     
     init() { }
@@ -69,18 +69,18 @@ final class Show: Model {
 
 extension Show {
     
-    enum Key {
-        static let name = FieldKey("name")
-        static let facebookURL = FieldKey("facebook_url")
-        static let twitterURL = FieldKey("twitter_url")
-        static let websiteURL = FieldKey("website_url")
-        static let imageURL = FieldKey("image_url")
-        static let hosts = FieldKey("hosts")
-        static let location = FieldKey("location")
-        static let showTime = FieldKey("show_time")
-        static let startTime = FieldKey("start_time")
-        static let endTime = FieldKey("end_time")
-        static let summary = FieldKey("summary")
+    enum FieldKeys {
+        static let name: FieldKey = "name"
+        static let facebookURL: FieldKey = "facebook_url"
+        static let twitterURL: FieldKey = "twitter_url"
+        static let websiteURL: FieldKey = "website_url"
+        static let imageURL: FieldKey = "image_url"
+        static let hosts: FieldKey = "hosts"
+        static let location: FieldKey = "location"
+        static let showTime: FieldKey = "show_time"
+        static let startTime: FieldKey = "start_time"
+        static let endTime: FieldKey = "end_time"
+        static let summary: FieldKey = "summary"
     }
 }
 
