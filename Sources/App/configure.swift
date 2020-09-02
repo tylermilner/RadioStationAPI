@@ -8,6 +8,7 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     setupDatabase(app)
+//    try setupMiddleware(app)
     try setupMigrations(app)
     try createAdminUserIfNecessary(app)
     
@@ -22,6 +23,10 @@ private func setupDatabase(_ app: Application) {
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql)
 }
+
+//private func setupMiddleware(_ app: Application) throws {
+//    app.middleware.use(ErrorMiddleware.default(environment: app.environment))
+//}
 
 private func setupMigrations(_ app: Application) throws {
     app.migrations.add(CreateStationConfig())
@@ -38,9 +43,7 @@ private func createAdminUserIfNecessary(_ app: Application) throws {
     // TODO: It might be better to check whether or not the admin needs to be created via the existence of some file on the file system or a value in some sort of "initial setup" table
     let userCount = try User.query(on: app.db).count().wait()
     if userCount == 0 {
-        // TODO: It would probably be better to salt the hash too using something like PBKDF2
-        let passwordHash = try Bcrypt.hash(defaultPassword)
-        let defaultUser = User(username: defaultUsername, passwordHash: passwordHash)
+        let defaultUser = try User(username: defaultUsername, password: defaultPassword)
         try defaultUser.save(on: app.db).wait()
     }
 }

@@ -11,6 +11,8 @@ import Vapor
 struct StationConfigController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
+        // TODO: Implmeent authentication for appropriate endpoints
+        
         routes.group("config") { config in
             config.get(use: index)
             config.post(use: create)

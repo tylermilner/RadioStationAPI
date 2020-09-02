@@ -45,11 +45,31 @@ extension User {
     }
 }
 
+extension User {
+    
+    convenience init(username: String, password: String) throws {
+        // TODO: It would probably be better to salt the hash too using something like PBKDF2
+        let passwordHash = try Bcrypt.hash(password)
+        self.init(username: username, passwordHash: passwordHash)
+    }
+    
+    func createToken() throws -> Token {
+        let calendar = Calendar(identifier: .gregorian)
+        let now = Date()
+        
+        let expiration = calendar.date(byAdding: .month, value: 1, to: now)
+        let token = [UInt8].random(count: 10).base64
+        let userId = try requireID()
+        
+        return Token(userId: userId, token: token, expiresAt: expiration)
+    }
+}
+
 // MARK: - DTO
 
 extension User {
     
-    struct Get {
+    struct Get: Content {
         let username: String
         let id: UUID
         let createdAt: Date?
@@ -59,5 +79,17 @@ extension User {
     func responseDTO() throws -> Get {
         let id = try requireID()
         return Get(username: username, id: id, createdAt: createdAt, updatedAt: updatedAt)
+    }
+}
+
+// MARK: - ModelAuthenticatable
+
+extension User: ModelAuthenticatable {
+    
+    static let usernameKey = \User.$username
+    static let passwordHashKey = \User.$passwordHash
+    
+    func verify(password: String) throws -> Bool {
+        try Bcrypt.verify(password, created: passwordHash)
     }
 }

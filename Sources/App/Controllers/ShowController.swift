@@ -11,6 +11,8 @@ import Vapor
 struct ShowController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
+        // TODO: Implmeent authentication for appropriate endpoints
+        
         routes.group("shows") { shows in
             shows.get(use: indexAll)
             shows.post(use: create)

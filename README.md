@@ -85,3 +85,4 @@ References that have helped me on my server-side Swift journey:
 * [Server side Swift projects inside Docker using Vapor 4](https://theswiftdev.com/server-side-swift-projects-inside-docker-using-vapor-4/)
 * [How to Build a To-Do List Back End With Vapor 4 and Swift](https://medium.com/better-programming/vapor-4-todo-backend-5035c9d7e295)
 * [How to do integration testing on a Vapor server](https://losingfight.com/blog/2018/12/16/how-to-do-integration-testing-on-a-vapor-server/)
+* [Vapor 4 Authentication: Getting Started](https://www.raywenderlich.com/9191035-vapor-4-authentication-getting-started)

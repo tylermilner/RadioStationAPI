@@ -45,3 +45,36 @@ extension Token {
         static let createdAt: FieldKey = "created_at"
     }
 }
+
+// MARK: - DTO
+
+extension Token {
+    
+    enum DTOError: Error {
+        case missingExpiration
+    }
+    
+    struct Get: Content {
+        let token: String
+        let expiresAt: Date
+    }
+    
+    func responseDTO() throws -> Get {
+        guard let expiresAt = expiresAt else { throw DTOError.missingExpiration }
+        return Get(token: value, expiresAt: expiresAt)
+    }
+}
+
+// MARK: - ModelTokenAuthenticatable
+
+extension Token: ModelTokenAuthenticatable {
+    
+    static let valueKey = \Token.$value
+    static let userKey = \Token.$user
+    
+    var isValid: Bool {
+        guard let expiresAt = expiresAt else { return false }
+        let now = Date()
+        return now < expiresAt
+    }
+}
