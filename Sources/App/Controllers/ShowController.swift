@@ -24,7 +24,7 @@ struct ShowController: RouteCollection {
         }
         
         // Authenticated Routes
-        routes.group(Token.authenticator()) { tokenAuthenticated in
+        routes.group(Token.authenticator(), Token.guardMiddleware()) { tokenAuthenticated in
             tokenAuthenticated.group(shows) { shows in
                 shows.post(use: create)
                 
@@ -47,14 +47,12 @@ struct ShowController: RouteCollection {
     }
     
     func create(req: Request) throws -> EventLoopFuture<Show.Get> {
-        try req.auth.require(Token.self)
         let input = try req.content.decode(Show.Create.self)
         let show = Show(input: input)
         return show.save(on: req.db).map { show.responseDTO }
     }
     
     func update(req: Request) throws -> EventLoopFuture<Show.Get> {
-        try req.auth.require(Token.self)
         let patch = try req.content.decode(Show.Update.self)
         
         return Show.find(req.parameters.get("id"), on: req.db)
@@ -67,7 +65,6 @@ struct ShowController: RouteCollection {
     }
     
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        try req.auth.require(Token.self)
         return Show.find(req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
