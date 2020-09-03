@@ -10,17 +10,28 @@ import Vapor
 
 struct ShowController: RouteCollection {
     
+    private let shows: PathComponent = "shows"
+    private let showId: PathComponent = ":id"
+    
     func boot(routes: RoutesBuilder) throws {
-        // TODO: Implmeent authentication for appropriate endpoints
-        
-        routes.group("shows") { shows in
+        // Unauthenticated routes
+        routes.group(shows) { shows in
             shows.get(use: indexAll)
-            shows.post(use: create)
             
-            shows.group(":id") { show in
+            shows.group(showId) { show in
                 show.get(use: index)
-                show.patch(use: update)
-                show.delete(use: delete)
+            }
+        }
+        
+        // Authenticated Routes
+        routes.group(Token.authenticator()) { tokenAuthenticated in
+            tokenAuthenticated.group(shows) { shows in
+                shows.post(use: create)
+                
+                shows.group(showId) { show in
+                    show.patch(use: update)
+                    show.delete(use: delete)
+                }
             }
         }
     }
@@ -36,16 +47,18 @@ struct ShowController: RouteCollection {
     }
     
     func create(req: Request) throws -> EventLoopFuture<Show.Get> {
+        try req.auth.require(Token.self)
         let input = try req.content.decode(Show.Create.self)
         let show = Show(input: input)
         return show.save(on: req.db).map { show.responseDTO }
     }
     
     func update(req: Request) throws -> EventLoopFuture<Show.Get> {
+        try req.auth.require(Token.self)
         let patch = try req.content.decode(Show.Update.self)
         
         return Show.find(req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound))
+            .unwrap(or: Abort(.notFound)) // TODO: Provide reason for Abort errors
             .flatMap { show in
                 show.patch(with: patch)
                 return show.update(on: req.db)
@@ -54,6 +67,7 @@ struct ShowController: RouteCollection {
     }
     
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        try req.auth.require(Token.self)
         return Show.find(req.parameters.get("id"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
