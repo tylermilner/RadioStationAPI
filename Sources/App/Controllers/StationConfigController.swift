@@ -41,7 +41,7 @@ struct StationConfigController: RouteCollection {
         
         return StationConfig.query(on: req.db)
             .all()
-            .guard( { $0.isEmpty }, else: Abort(.badRequest))
+            .guard( { $0.isEmpty }, else: Abort(.forbidden))
             .flatMap { _ in
                 let config = StationConfig(input: input)
                 stationConfig = config
