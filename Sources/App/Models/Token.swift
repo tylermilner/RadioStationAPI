@@ -28,10 +28,10 @@ final class Token: Model {
     
     init() { }
     
-    init(id: UUID? = nil, userId: User.IDValue, token: String, expiresAt: Date?) {
+    init(id: UUID? = nil, userId: User.IDValue, value: String, expiresAt: Date?) {
         self.id = id
         self.$user.id = userId
-        self.value = token
+        self.value = value
         self.expiresAt = expiresAt
     }
 }

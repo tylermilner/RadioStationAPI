@@ -39,7 +39,7 @@ class StationConfigControllerTests: AppXCTestCase {
         try user.save(on: app.db).wait()
         
         let userId = try user.requireID()
-        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
         let configBody = StationConfig.Create(stationWebsiteURL: "https://test.com")
@@ -71,7 +71,7 @@ class StationConfigControllerTests: AppXCTestCase {
         try user.save(on: app.db).wait()
         
         let userId = try user.requireID()
-        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
         let seed = StationConfig(stationWebsiteURL: "https://test.com")
@@ -102,7 +102,7 @@ class StationConfigControllerTests: AppXCTestCase {
         try user.save(on: app.db).wait()
         
         let userId = try user.requireID()
-        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
         let seed = StationConfig(stationWebsiteURL: "https://test.com")

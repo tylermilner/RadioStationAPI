@@ -8,8 +8,7 @@
 import Fluent
 import Vapor
 
-// TODO: Implement auth middleware around protected routes
-
+// TODO: Write tests for this
 struct AuthController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {

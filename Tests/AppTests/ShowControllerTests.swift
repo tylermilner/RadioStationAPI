@@ -40,7 +40,7 @@ class ShowControllerTests: AppXCTestCase {
         try user.save(on: app.db).wait()
         
         let userId = try user.requireID()
-        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
         let create = Show.Create(name: "test", facebookURL: nil, twitterURL: nil, websiteURL: nil, imageURL: "http://test.com", hosts: "test", location: "test", showTime: "test", startTime: "test", endTime: "test", summary: "test")
@@ -90,7 +90,7 @@ class ShowControllerTests: AppXCTestCase {
         try user.save(on: app.db).wait()
         
         let userId = try user.requireID()
-        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
         let seed = Show(name: "test", facebookURL: nil, twitterURL: nil, websiteURL: nil, imageURL: "http://test.com", hosts: "test", location: "test", showTime: "test", startTime: "test", endTime: "test", summary: "test")
@@ -123,7 +123,7 @@ class ShowControllerTests: AppXCTestCase {
         try user.save(on: app.db).wait()
         
         let userId = try user.requireID()
-        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
         let seed = Show(name: "test", facebookURL: nil, twitterURL: nil, websiteURL: nil, imageURL: "http://test.com", hosts: "test", location: "test", showTime: "test", startTime: "test", endTime: "test", summary: "test")

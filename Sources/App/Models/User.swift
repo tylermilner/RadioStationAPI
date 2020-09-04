@@ -58,10 +58,10 @@ extension User {
         let now = Date()
         
         let expiration = calendar.date(byAdding: .month, value: 1, to: now)
-        let token = [UInt8].random(count: 10).base64
+        let value = [UInt8].random(count: 16).base64
         let userId = try requireID()
         
-        return Token(userId: userId, token: token, expiresAt: expiration)
+        return Token(userId: userId, value: value, expiresAt: expiration)
     }
 }
 
