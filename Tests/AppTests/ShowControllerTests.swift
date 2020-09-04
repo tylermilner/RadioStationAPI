@@ -25,6 +25,8 @@ class ShowControllerTests: AppXCTestCase {
         try app.test(.GET, shows) { res in
             
             // Assert
+            XCTAssertEqual(res.status, .ok)
+            
             XCTAssertContent([Show.Get].self, res) { shows in
                 XCTAssertEqual(shows.count, 1)
                 XCTAssertEqual(shows.first, seed.responseDTO)
@@ -34,14 +36,24 @@ class ShowControllerTests: AppXCTestCase {
     
     func test_postShows_createsShow() throws {
         // Arrange
+        let user = try User(username: "test", password: "test")
+        try user.save(on: app.db).wait()
+        
+        let userId = try user.requireID()
+        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        try token.save(on: app.db).wait()
+        
         let create = Show.Create(name: "test", facebookURL: nil, twitterURL: nil, websiteURL: nil, imageURL: "http://test.com", hosts: "test", location: "test", showTime: "test", startTime: "test", endTime: "test", summary: "test")
         
         // Act
         try app.test(.POST, shows, beforeRequest: { req in
             try req.content.encode(create)
+            req.headers.bearerAuthorization = BearerAuthorization(token: token.value)
         }, afterResponse: { res in
             
             // Assert
+            XCTAssertEqual(res.status, .ok)
+            
             try XCTAssertContent(Show.Get.self, res) { show in
                 XCTAssertEqual(show.createRepresentation, create)
                 
@@ -64,6 +76,8 @@ class ShowControllerTests: AppXCTestCase {
         try app.test(.GET, "\(shows)/\(seedId)") { res in
             
             // Assert
+            XCTAssertEqual(res.status, .ok)
+            
             XCTAssertContent(Show.Get.self, res) { show in
                 XCTAssertEqual(show, seed.responseDTO)
             }
@@ -72,6 +86,13 @@ class ShowControllerTests: AppXCTestCase {
     
     func test_patchShow_updatesShow() throws {
         // Arrange
+        let user = try User(username: "test", password: "test")
+        try user.save(on: app.db).wait()
+        
+        let userId = try user.requireID()
+        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        try token.save(on: app.db).wait()
+        
         let seed = Show(name: "test", facebookURL: nil, twitterURL: nil, websiteURL: nil, imageURL: "http://test.com", hosts: "test", location: "test", showTime: "test", startTime: "test", endTime: "test", summary: "test")
         try seed.save(on: app.db).wait()
         let seedId = try XCTUnwrap(seed.id)
@@ -81,9 +102,12 @@ class ShowControllerTests: AppXCTestCase {
         // Act
         try app.test(.PATCH, "\(shows)/\(seedId)", beforeRequest: { req in
             try req.content.encode(patch)
+            req.headers.bearerAuthorization = BearerAuthorization(token: token.value)
         }, afterResponse: { res in
             
             // Assert
+            XCTAssertEqual(res.status, .ok)
+            
             try XCTAssertContent(Show.Get.self, res) { show in
                 XCTAssertEqual(show.updateRepresentation, patch)
                 
@@ -95,12 +119,21 @@ class ShowControllerTests: AppXCTestCase {
     
     func test_deleteShow_deletesShow() throws {
         // Arrange
+        let user = try User(username: "test", password: "test")
+        try user.save(on: app.db).wait()
+        
+        let userId = try user.requireID()
+        let token = Token(userId: userId, token: "test", expiresAt: Date.distantFuture)
+        try token.save(on: app.db).wait()
+        
         let seed = Show(name: "test", facebookURL: nil, twitterURL: nil, websiteURL: nil, imageURL: "http://test.com", hosts: "test", location: "test", showTime: "test", startTime: "test", endTime: "test", summary: "test")
         try seed.save(on: app.db).wait()
         let seedId = try XCTUnwrap(seed.id)
         
         // Act
-        try app.test(.DELETE, "\(shows)/\(seedId)") { res in
+        try app.test(.DELETE, "\(shows)/\(seedId)", beforeRequest: {req in
+            req.headers.bearerAuthorization = BearerAuthorization(token: token.value)
+        }, afterResponse: { res in
             
             // Assert
             XCTAssertEqual(res.status, HTTPStatus.noContent)
@@ -108,7 +141,7 @@ class ShowControllerTests: AppXCTestCase {
             
             let show = try Show.find(seedId, on: app.db).wait()
             XCTAssertNil(show)
-        }
+        })
     }
 }
 
