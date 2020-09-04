@@ -10,13 +10,20 @@ import Vapor
 
 struct StationConfigController: RouteCollection {
     
+    private let config: PathComponent = "config"
+    
     func boot(routes: RoutesBuilder) throws {
-        // TODO: Implmeent authentication for appropriate endpoints
-        
-        routes.group("config") { config in
+        // Unauthenticated routes
+        routes.group(config) { config in
             config.get(use: index)
-            config.post(use: create)
-            config.patch(use: update)
+        }
+        
+        // Authenticated routes
+        routes.group(Token.authenticator(), Token.guardMiddleware()) { tokenAuthenticated in
+            tokenAuthenticated.group(config) { config in
+                config.post(use: create)
+                config.patch(use: update)
+            }
         }
     }
     
