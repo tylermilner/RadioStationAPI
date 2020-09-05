@@ -8,9 +8,8 @@
 import Fluent
 import Vapor
 
-// MARK: - Fluent
-
 final class Show: Model {
+    
     static let schema = "shows"
     
     @ID(key: .id)
@@ -67,6 +66,8 @@ final class Show: Model {
     }
 }
 
+// MARK: - FieldKeys
+
 extension Show {
     
     enum FieldKeys {
@@ -84,7 +85,7 @@ extension Show {
     }
 }
 
-// MARK: - PATCH
+// MARK: - Extensions
 
 extension Show {
     

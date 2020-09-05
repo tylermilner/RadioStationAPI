@@ -8,9 +8,8 @@
 import Fluent
 import Vapor
 
-// MARK: - Fluent
-
 final class StationConfig: Model {
+    
     static let schema = "station_configs"
     
     @ID(key: .id)
@@ -29,6 +28,8 @@ final class StationConfig: Model {
         self.stationWebsiteURL = stationWebsiteURL
     }
 }
+
+// MARK: - FieldKeys
 
 extension StationConfig {
     
@@ -59,7 +60,7 @@ final class StationStream: Model {
     var qualityScore: Int
 }
 
-// MARK: - PATCH
+// MARK: - Extensions
 
 extension StationConfig {
     

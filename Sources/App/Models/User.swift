@@ -9,6 +9,7 @@ import Vapor
 import Fluent
 
 final class User: Model {
+    
     static let schema = "users"
     
     @ID(key: .id)
@@ -35,6 +36,8 @@ final class User: Model {
     }
 }
 
+// MARK: - FieldKeys
+
 extension User {
     
     enum FieldKeys {
@@ -44,6 +47,8 @@ extension User {
         static let updatedAt: FieldKey = "updated_at"
     }
 }
+
+// MARK: - Extensions
 
 extension User {
     

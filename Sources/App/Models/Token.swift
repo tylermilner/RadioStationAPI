@@ -9,6 +9,7 @@ import Fluent
 import Vapor
 
 final class Token: Model {
+    
     static let schema = "tokens"
     
     @ID(key: .id)
@@ -35,6 +36,8 @@ final class Token: Model {
         self.expiresAt = expiresAt
     }
 }
+
+// MARK: - FieldKeys
 
 extension Token {
     
