@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: 0.0.2
   title: Radio Station API
 servers:
   - url: "http://localhost:8080"
@@ -94,14 +94,14 @@ paths:
       tags:
         - authenticate
       security:
-        - APIKeyAuth: []
-      requestBody:
-        description: "Authentication credentials"
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/AuthenticationRequest"
+        - BasicAuth: []
+      # requestBody:
+      #   description: "Authentication credentials"
+      #   required: true
+      #   content:
+      #     application/x-www-form-urlencoded:
+      #       schema:
+      #         $ref: "#/components/schemas/AuthenticationRequest"
       responses:
         "200":
           description: "Access token that can be used to access protected functions"
@@ -264,16 +264,14 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
       
-
   securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  
     BearerAuth:
       type: http
       scheme: bearer
-    
-    APIKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-Key
 
   schemas:
     Config:
