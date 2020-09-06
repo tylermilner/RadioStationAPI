@@ -8,7 +8,6 @@
 import Fluent
 import Vapor
 
-// TODO: Write tests for this
 struct AuthController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
