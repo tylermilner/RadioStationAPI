@@ -15,16 +15,17 @@ final class StationConfig: Model {
     @ID(key: .id)
     var id: UUID?
     
-    // TODO: Setup relationship for StationConfig <--> StationStream
-//    var streams: [StationStream]
-    
     @Field(key: FieldKeys.stationWebsiteURL)
     var stationWebsiteURL: String
     
+    @Field(key: FieldKeys.streams)
+    var streams: [Stream]
+    
     init() { }
     
-    init(id: UUID? = nil, stationWebsiteURL: String) {
+    init(id: UUID? = nil, stationWebsiteURL: String, streams: [Stream]) {
         self.id = id
+        self.streams = streams
         self.stationWebsiteURL = stationWebsiteURL
     }
 }
@@ -35,6 +36,7 @@ extension StationConfig {
     
     enum FieldKeys {
         static let stationWebsiteURL: FieldKey = "station_website_url"
+        static let streams: FieldKey = "streams"
     }
 }
 
@@ -42,9 +44,18 @@ extension StationConfig {
 
 extension StationConfig {
     
+    struct Stream: Content, Equatable {
+        let name: String
+        let url: String
+        let qualityScore: Int
+    }
+}
+
+extension StationConfig {
+    
     func patch(with patch: StationConfig.Update) {
-        // TODO: Implement 'streams' property once relationships are setup
         stationWebsiteURL = patch.stationWebsiteURL ?? stationWebsiteURL
+        streams = patch.streams ?? streams
     }
 }
 
@@ -52,30 +63,29 @@ extension StationConfig {
 
 extension StationConfig {
     
-    struct Create: Content {
+    struct Create: Content, Equatable {
         let stationWebsiteURL: String
-        // TODO: Implement 'streams' property once relationships are setup
+        let streams: [Stream]
     }
     
-    struct Get: Content {
-        // TODO: Implement 'streams' property once relationships are setup
-        var stationWebsiteURL: String
+    struct Get: Content, Equatable {
+        let stationWebsiteURL: String
+        let streams: [Stream]
     }
     
-    struct Update: Content {
-        // TODO: Implement 'streams' property once relationships are setup
+    struct Update: Content, Equatable {
         let stationWebsiteURL: String?
+        let streams: [Stream]?
     }
     
     convenience init(input: Create) {
         self.init()
         
-        // TODO: Implement 'streams' property once relationships are setup
         self.stationWebsiteURL = input.stationWebsiteURL
+        self.streams = input.streams
     }
     
     var responseDTO: Get {
-        // TODO: Implement 'streams' property once relationships are setup
-        return Get(stationWebsiteURL: stationWebsiteURL)
+        return Get(stationWebsiteURL: stationWebsiteURL, streams: streams)
     }
 }

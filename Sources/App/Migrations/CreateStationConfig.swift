@@ -12,7 +12,7 @@ struct CreateStationConfig: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         return database.schema(StationConfig.schema)
             .id()
-            // TODO: Implement 'streams' property once relationships are setup
+            .field(StationConfig.FieldKeys.streams, .array(of: .dictionary), .required)
             .field(StationConfig.FieldKeys.stationWebsiteURL, .string, .required)
             .create()
     }

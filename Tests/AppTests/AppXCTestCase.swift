@@ -27,7 +27,6 @@ class AppXCTestCase: XCTestCase {
         app.databases.use(.sqlite(.memory), as: .test, isDefault: true)
         
         app.migrations.add(CreateStationConfig())
-        app.migrations.add(CreateStationStream())
         app.migrations.add(CreateShow())
         app.migrations.add(CreateUser())
         app.migrations.add(CreateToken())

@@ -18,7 +18,7 @@ class StationConfigControllerTests: AppXCTestCase {
     
     func test_getStationConfig_returnsConfig() throws {
         // Arrange
-        let seed = StationConfig(stationWebsiteURL: "https://test.com")
+        let seed = StationConfig(stationWebsiteURL: "https://test.com", streams: [StationConfig.Stream(name: "test", url: "https://stream.test.com", qualityScore: 1)])
         try seed.save(on: app.db).wait()
         
         // Act
@@ -28,7 +28,7 @@ class StationConfigControllerTests: AppXCTestCase {
             XCTAssertEqual(res.status, .ok)
             
             XCTAssertContent(StationConfig.Get.self, res) { config in
-                XCTAssertEqual(config.stationWebsiteURL, seed.stationWebsiteURL)
+                XCTAssertEqual(config, seed.responseDTO)
             }
         }
     }
@@ -42,26 +42,26 @@ class StationConfigControllerTests: AppXCTestCase {
         let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
-        let configBody = StationConfig.Create(stationWebsiteURL: "https://test.com")
+        let create = StationConfig.Create(stationWebsiteURL: "https://test.com", streams: [StationConfig.Stream(name: "test", url: "https://stream.test.com", qualityScore: 1)])
         
         // Act
         try app.test(.POST, config, beforeRequest: { req in
-            try req.content.encode(configBody)
+            try req.content.encode(create)
             req.headers.bearerAuthorization = BearerAuthorization(token: token.value)
         }, afterResponse: { res in
             
             // Assert
             XCTAssertEqual(res.status, .ok)
             
-            XCTAssertContent(StationConfig.Get.self, res) { config in
-                XCTAssertEqual(config.stationWebsiteURL, configBody.stationWebsiteURL)
+            try XCTAssertContent(StationConfig.Get.self, res) { config in
+                XCTAssertEqual(config.createRepresentation, create)
+                
+                let databaseConfigs = try StationConfig.query(on: app.db).all().wait()
+                XCTAssertEqual(databaseConfigs.count, 1)
+                
+                let databaseConfig = try XCTUnwrap(databaseConfigs.first)
+                XCTAssertEqual(databaseConfig.responseDTO, config)
             }
-            
-            let databaseConfigs = try StationConfig.query(on: app.db).all().wait()
-            XCTAssertEqual(databaseConfigs.count, 1)
-            
-            let config = try XCTUnwrap(databaseConfigs.first)
-            XCTAssertEqual(config.stationWebsiteURL, configBody.stationWebsiteURL)
         })
     }
     
@@ -74,14 +74,14 @@ class StationConfigControllerTests: AppXCTestCase {
         let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
-        let seed = StationConfig(stationWebsiteURL: "https://test.com")
+        let seed = StationConfig(stationWebsiteURL: "https://test.com", streams: [StationConfig.Stream(name: "test", url: "https://stream.test.com", qualityScore: 1)])
         try seed.save(on: app.db).wait()
         
-        let configBody = StationConfig.Create(stationWebsiteURL: "https://test.com")
+        let create = StationConfig.Create(stationWebsiteURL: "https://new.test.com", streams: [StationConfig.Stream(name: "new-test", url: "https://new-stream.test.com", qualityScore: 2)])
         
         // Act
         try app.test(.POST, config, beforeRequest: { req in
-            try req.content.encode(configBody)
+            try req.content.encode(create)
             req.headers.bearerAuthorization = BearerAuthorization(token: token.value)
         }, afterResponse: { res in
             
@@ -91,8 +91,8 @@ class StationConfigControllerTests: AppXCTestCase {
             let databaseConfigs = try StationConfig.query(on: app.db).all().wait()
             XCTAssertEqual(databaseConfigs.count, 1)
             
-            let config = try XCTUnwrap(databaseConfigs.first)
-            XCTAssertEqual(config.stationWebsiteURL, seed.stationWebsiteURL)
+            let databaseConfig = try XCTUnwrap(databaseConfigs.first)
+            XCTAssertEqual(databaseConfig.responseDTO, seed.responseDTO)
         })
     }
     
@@ -105,15 +105,15 @@ class StationConfigControllerTests: AppXCTestCase {
         let token = Token(userId: userId, value: "test", expiresAt: Date.distantFuture)
         try token.save(on: app.db).wait()
         
-        let seed = StationConfig(stationWebsiteURL: "https://test.com")
+        let seed = StationConfig(stationWebsiteURL: "https://test.com", streams: [StationConfig.Stream(name: "test", url: "https://stream.test.com", qualityScore: 1)])
         try seed.save(on: app.db).wait()
         let seedId = try XCTUnwrap(seed.id)
         
-        let configBody = StationConfig.Update(stationWebsiteURL: "https://update.test.com")
+        let patch = StationConfig.Update(stationWebsiteURL: "https://update.test.com", streams: [StationConfig.Stream(name: "update-test", url: "https://update-stream.test.com", qualityScore: 2)])
         
         // Act
         try app.test(.PATCH, config, beforeRequest: { req in
-            try req.content.encode(configBody)
+            try req.content.encode(patch)
             req.headers.bearerAuthorization = BearerAuthorization(token: token.value)
         }, afterResponse: { res in
             
@@ -121,11 +121,22 @@ class StationConfigControllerTests: AppXCTestCase {
             XCTAssertEqual(res.status, .ok)
             
             try XCTAssertContent(StationConfig.Get.self, res) { config in
-                XCTAssertEqual(config.stationWebsiteURL, configBody.stationWebsiteURL)
+                XCTAssertEqual(config.updateRepresentation, patch)
                 
-                let updatedConfig = try StationConfig.find(seedId, on: app.db).wait()
-                XCTAssertEqual(updatedConfig?.stationWebsiteURL, configBody.stationWebsiteURL)
+                let databaseConfig = try StationConfig.find(seedId, on: app.db).wait()
+                XCTAssertEqual(databaseConfig?.responseDTO.updateRepresentation, patch)
             }
         })
+    }
+}
+
+extension StationConfig.Get {
+    
+    var createRepresentation: StationConfig.Create {
+        return StationConfig.Create(stationWebsiteURL: stationWebsiteURL, streams: streams)
+    }
+    
+    var updateRepresentation: StationConfig.Update {
+        return StationConfig.Update(stationWebsiteURL: stationWebsiteURL, streams: streams)
     }
 }
