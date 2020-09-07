@@ -30,6 +30,7 @@ private func setupDatabase(_ app: Application) {
 
 private func setupMigrations(_ app: Application) throws {
     app.migrations.add(CreateStationConfig())
+    app.migrations.add(CreateStationStream())
     app.migrations.add(CreateShow())
     app.migrations.add(CreateUser())
     app.migrations.add(CreateToken())

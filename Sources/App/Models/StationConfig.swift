@@ -38,28 +38,6 @@ extension StationConfig {
     }
 }
 
-final class StationStream: Model {
-    static let schema = "station_stream"
-    
-    @ID(key: .id)
-    var id: UUID?
-    
-    @Field(key: "name")
-    var name: String
-    
-    @Field(key: "type")
-    var type: String
-    
-    @Field(key: "bitrate")
-    var bitrate: Int
-    
-    @Field(key: "url")
-    var url: String
-    
-    @Field(key: "quality_score")
-    var qualityScore: Int
-}
-
 // MARK: - Extensions
 
 extension StationConfig {
