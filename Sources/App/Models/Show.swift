@@ -18,13 +18,13 @@ final class Show: Model {
     @Field(key: FieldKeys.name)
     var name: String
     
-    @Field(key: FieldKeys.facebookURL)
+    @OptionalField(key: FieldKeys.facebookURL)
     var facebookURL: String?
     
-    @Field(key: FieldKeys.twitterURL)
+    @OptionalField(key: FieldKeys.twitterURL)
     var twitterURL: String?
     
-    @Field(key: FieldKeys.websiteURL)
+    @OptionalField(key: FieldKeys.websiteURL)
     var websiteURL: String?
     
     @Field(key: FieldKeys.imageURL)

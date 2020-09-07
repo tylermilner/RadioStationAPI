@@ -111,8 +111,8 @@ class ShowControllerTests: AppXCTestCase {
             try XCTAssertContent(Show.Get.self, res) { show in
                 XCTAssertEqual(show.updateRepresentation, patch)
                 
-                let updatedShow = try Show.find(seedId, on: app.db).wait()
-                XCTAssertEqual(updatedShow?.responseDTO.updateRepresentation, patch)
+                let databaseShow = try Show.find(seedId, on: app.db).wait()
+                XCTAssertEqual(databaseShow?.responseDTO.updateRepresentation, patch)
             }
         })
     }

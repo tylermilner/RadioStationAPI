@@ -21,7 +21,7 @@ final class Token: Model {
     @Field(key: FieldKeys.value)
     var value: String
     
-    @Field(key: FieldKeys.expiresAt)
+    @Timestamp(key: FieldKeys.expiresAt, on: .none)
     var expiresAt: Date?
     
     @Timestamp(key: FieldKeys.createdAt, on: .create)
