@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.2
+  version: 0.1.0
   title: Radio Station API
 servers:
   - url: "http://localhost:8080"
@@ -95,13 +95,6 @@ paths:
         - authenticate
       security:
         - BasicAuth: []
-      # requestBody:
-      #   description: "Authentication credentials"
-      #   required: true
-      #   content:
-      #     application/x-www-form-urlencoded:
-      #       schema:
-      #         $ref: "#/components/schemas/AuthenticationRequest"
       responses:
         "200":
           description: "Access token that can be used to access protected functions"
@@ -145,7 +138,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Show'
+              $ref: '#/components/schemas/CreateShow'
       responses:
         "201":
           description: "The show that was created"
@@ -169,8 +162,7 @@ paths:
           description: "Show ID"
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: "The specified show"
@@ -195,14 +187,13 @@ paths:
           description: "Show ID"
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Show'
+              $ref: '#/components/schemas/UpdateShow'
       responses:
         "200":
           description: "The modified show"
@@ -229,8 +220,7 @@ paths:
           description: "Show ID"
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "204":
           description: "Show deleted successfully"
@@ -296,44 +286,19 @@ components:
           type: string
           description: "The name of the stream"
           example: "MP3 (high bitrate)"
-        format:
-          type: string
-          description: "The stream's format"
-          example: "MP3"
-        bitrate:
-          type: integer
-          description: "The stream's bitrate, in bits per second"
-          example: 192000
         url:
           type: string
           description: "The stream's URL"
           example: "https://streams.example.com:9000"
         qualityScore:
           type: integer
+          format: int64
           description: "The stream's relative quality score, from 1-100."
           example: 100
       required:
         - name
-        - format
-        - bitrate
         - url
         - qualityScore
-
-    AuthenticationRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          description: "The user's username"
-          example: "admin"
-        password:
-          type: string
-          format: password
-          description: "The user's password"
-          example: "password"
-      required:
-        - username
-        - password
 
     AuthenticationResponse:
       type: object
@@ -342,8 +307,13 @@ components:
           type: string
           description: "The token to be used for 'Bearer' authentication in future requests"
           example: "abc123"
+        expiresAt:
+          type: string
+          format: date-time
+          description: "The time at which the token expires"
       required:
         - token
+        - expiresAt
     
     ArrayOfShows:
       type: array
@@ -354,10 +324,9 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
           description: "The show's identifier"
-          example: 1
+          example: "abc123"
         name:
           type: string
           description: "The show's name"
@@ -414,6 +383,115 @@ components:
         - startTime
         - endTime
         - summary
+        
+    CreateShow:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The show's name"
+          example: "Wobbly Wednesday"
+        facebookURL:
+          type: string
+          description: "The show's Facebook URL, if available"
+          example: "https://facebook.com/wobblywednesday"
+        twitterURL:
+          type: string
+          description: "The show's Twitter URL, if available"
+          example: "https://twitter.com/wobblywednesday"
+        websiteURL:
+          type: string
+          description: "The show's website"
+          example: "https://wobblywednesday.com"
+        imageURL:
+          type: string
+          description: "The show's image"
+          example: "https://example.com/show-image.jpg"
+        hosts:
+          type: string
+          description: "The show's hosts"
+          example: "Tmart and Tmil"
+        location:
+          type: string
+          description: "The show's location"
+          example: "Texas, USA"
+        showTime:
+          type: string
+          description: "The day of the week when the show goes live"
+          example: "WEDNESDAY"
+        startTime:
+          type: string
+          format: date-time
+          description: "The time that the show goes on-air"
+          example: "2020-08-26T00:00:00+00:00"
+        endTime:
+          type: string
+          format: date-time
+          description: "The time that the show goes off-air"
+          example: "2020-08-26T02:00:00+00:00"
+        summary:
+          type: string
+          description: "The show's summary"
+          example: "Turn up the bass for 2 hours of house-shaking bass music!"
+      required:
+        - name
+        - imageURL
+        - hosts
+        - location
+        - showTime
+        - startTime
+        - endTime
+        - summary
+    
+    UpdateShow:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The show's name"
+          example: "Wobbly Wednesday"
+        facebookURL:
+          type: string
+          description: "The show's Facebook URL, if available"
+          example: "https://facebook.com/wobblywednesday"
+        twitterURL:
+          type: string
+          description: "The show's Twitter URL, if available"
+          example: "https://twitter.com/wobblywednesday"
+        websiteURL:
+          type: string
+          description: "The show's website"
+          example: "https://wobblywednesday.com"
+        imageURL:
+          type: string
+          description: "The show's image"
+          example: "https://example.com/show-image.jpg"
+        hosts:
+          type: string
+          description: "The show's hosts"
+          example: "Tmart and Tmil"
+        location:
+          type: string
+          description: "The show's location"
+          example: "Texas, USA"
+        showTime:
+          type: string
+          description: "The day of the week when the show goes live"
+          example: "WEDNESDAY"
+        startTime:
+          type: string
+          format: date-time
+          description: "The time that the show goes on-air"
+          example: "2020-08-26T00:00:00+00:00"
+        endTime:
+          type: string
+          format: date-time
+          description: "The time that the show goes off-air"
+          example: "2020-08-26T02:00:00+00:00"
+        summary:
+          type: string
+          description: "The show's summary"
+          example: "Turn up the bass for 2 hours of house-shaking bass music!"
     
     Error:
       type: object
