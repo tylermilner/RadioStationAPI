@@ -34,6 +34,7 @@ struct StationConfigController: RouteCollection {
             .map { $0.responseDTO }
     }
     
+    // TODO: Return 201 Created status instead of 200 OK. Need to create a custom struct that conforms to ResponseEncodable. See https://docs.vapor.codes/4.0/content/#custom-responseencodable
     func create(req: Request) throws -> EventLoopFuture<StationConfig.Get> {
         let input = try req.content.decode(StationConfig.Create.self)
         
