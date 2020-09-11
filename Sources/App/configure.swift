@@ -33,7 +33,7 @@ private func setupMigrations(_ app: Application) throws {
     app.migrations.add(CreateShow())
     app.migrations.add(CreateUser())
     app.migrations.add(CreateToken())
-    try app.autoMigrate().wait()
+    try app.autoMigrate().wait() // TODO: Auto-migrate doesn't seem to play well when doing a `docker-compose up app` command (since the DB container takes a bit longer to start up than the app). Need to remove auto migrations.
 }
 
 private func createAdminUserIfNecessary(_ app: Application) throws {
