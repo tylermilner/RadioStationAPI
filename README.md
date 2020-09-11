@@ -21,13 +21,13 @@ Before building and running, we need to start up a PostgreSQL database that the 
 Use the `docker run` command to start up a Docker container, using the [`postgres` docker image](https://hub.docker.com/_/postgres):
 
 ```bash
-docker run --name vapor-postgres -e POSTGRES_USER=vapor_username -e POSTGRES_PASSWORD=vapor_password -e POSTGRES_DB=vapor_database -d -p 5432:5432 postgres
+docker run --name radiostationapi-postgres -e POSTGRES_USER=vapor_username -e POSTGRES_PASSWORD=vapor_password -e POSTGRES_DB=vapor_database -d -p 5432:5432 postgres
 ```
 
 A quick rundown on the flags in the above command, in case you're new to Docker (like me):
 
 * `--name`
-    * The name that you want to assign to the container, in this case "vapor-postgres"
+    * The name that you want to assign to the container, in this case "radiostationapi-postgres"
 * `-e`
     * Environment variables passed into the container, in this case we're providing environment variables that match up to the default values used in `configure.swift`
 * `-d`
@@ -46,13 +46,13 @@ You should see the Postgres container running.
 You can stop the container using the `docker stop` command:
 
 ```bash
-docker stop vapor-postgres
+docker stop radiostationapi-postgres
 ```
 
 Instead of executing the above `docker run` command again (which will result in an error), you can restart the container using the `docker start` command:
 
 ```bash
-docker start vapor-postgres
+docker start radiostationapi-postgres
 ```
 
 You can also view a list of all started & stopped docker containers using the `-a` flag on the `docker ps` command:
@@ -64,7 +64,7 @@ docker ps -a
 If you want a fresh start, you can also remove the container using the `docker rm` command:
 
 ```bash
-docker rm vapor-postgres
+docker rm radiostationapi-postgres
 ```
 
 This will remove the container and all data stored within its database from your system. You will then need to start up the container again using the `docker run` command.
