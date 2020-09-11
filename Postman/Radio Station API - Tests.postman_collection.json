@@ -1,0 +1,1536 @@
+{
+	"info": {
+		"_postman_id": "1dd32e12-a2e4-4fbf-8577-d7efc0fab8f9",
+		"name": "Radio Station API - Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "authenticate",
+			"item": [
+				{
+					"name": "Authenticate with the station",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38338412-68d5-4e8b-8912-c425fe7e3e1f",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"    var token = jsonData.token;",
+									"",
+									"    pm.environment.set(\"token\", token);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "default",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/authenticate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Invalid credentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/authenticate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authenticate"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "An unexpected error occurred",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/authenticate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authenticate"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "Access token that can be used to access protected functions",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/authenticate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authenticate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"token\": \"abc123\",\n \"expiresAt\": \"sint sed\"\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "config",
+			"item": [
+				{
+					"name": "Create station configuration info",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3828b629-e567-4a92-83a1-6f19cfe13125",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "15b68748-e2b2-435c-981d-ffc02530cc90",
+								"exec": [
+									"pm.test(\"Status code is 200 or 403\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+									"});",
+									"",
+									"// TODO: Validate schema ",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"Stream 1\",\n            \"url\": \"https://stream1.example.com\",\n            \"qualityScore\": 1\n        },\n        {\n            \"name\": \"Stream 2\",\n            \"url\": \"https://stream2.example.com\",\n            \"qualityScore\": 2\n        }\n    ],\n    \"stationWebsiteURL\": \"https://station.example.com\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/config",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"config"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "The request is missing proper authorization",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "An unexpected error occurred",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "The station configuration that was created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"streams\": [\n  {\n   \"name\": \"MP3 (high bitrate)\",\n   \"url\": \"https://streams.example.com:9000\",\n   \"qualityScore\": 100\n  },\n  {\n   \"name\": \"MP3 (high bitrate)\",\n   \"url\": \"https://streams.example.com:9000\",\n   \"qualityScore\": 100\n  }\n ],\n \"stationWebsiteURL\": \"https://example.com\"\n}"
+						},
+						{
+							"name": "Either a station configuration already exists or there was a problem with the format of the request. Check the error for details.",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get station configuration info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "922af09e-dd7c-4579-a7be-31dbeab1d26d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// TODO: Validate schema",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/config",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"config"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "No station configuration exists. Create one first.",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "Details about the station configuration",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"streams\": [\n  {\n   \"name\": \"MP3 (high bitrate)\",\n   \"url\": \"https://streams.example.com:9000\",\n   \"qualityScore\": 100\n  },\n  {\n   \"name\": \"MP3 (high bitrate)\",\n   \"url\": \"https://streams.example.com:9000\",\n   \"qualityScore\": 100\n  }\n ],\n \"stationWebsiteURL\": \"https://example.com\"\n}"
+						},
+						{
+							"name": "An unexpected error occurred",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update station configuration info",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "541cef82-694d-4915-9ab5-9f6cc187bc72",
+								"exec": [
+									"// Generate a random station website URL",
+									"const num = pm.variables.replaceIn('{{$randomInt}}');",
+									"const updatedStationWebsiteURL = \"https://updated-\" + num + \"-station.example.com\";",
+									"",
+									"pm.environment.set(\"updatedStationWebsiteURL\", updatedStationWebsiteURL);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1366710e-36c1-43c1-b7de-23a5ae6f4e1d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains updated stationWebsiteURL\", function () {",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData.stationWebsiteURL).to.not.be.empty;",
+									"    var stationWebsiteURL = jsonData.stationWebsiteURL;",
+									"",
+									"    var environmentUpdatedStationWebsiteURL = pm.environment.get(\"updatedStationWebsiteURL\");",
+									"    pm.expect(stationWebsiteURL).to.equal(environmentUpdatedStationWebsiteURL);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"stationWebsiteURL\": \"{{updatedStationWebsiteURL}}\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/config",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"config"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "No station configuration exists. Create one first.",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "The updated station configuration",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"streams\": [\n  {\n   \"name\": \"MP3 (high bitrate)\",\n   \"url\": \"https://streams.example.com:9000\",\n   \"qualityScore\": 100\n  },\n  {\n   \"name\": \"MP3 (high bitrate)\",\n   \"url\": \"https://streams.example.com:9000\",\n   \"qualityScore\": 100\n  }\n ],\n \"stationWebsiteURL\": \"https://example.com\"\n}"
+						},
+						{
+							"name": "The request is missing proper authorization",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						},
+						{
+							"name": "An unexpected error occurred",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"streams\": [\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        },\n        {\n            \"name\": \"MP3 (high bitrate)\",\n            \"url\": \"https://streams.example.com:9000\",\n            \"qualityScore\": 100\n        }\n    ],\n    \"stationWebsiteURL\": \"https://example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "shows",
+			"item": [
+				{
+					"name": "create show",
+					"item": [
+						{
+							"name": "Create show",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b247e040-ae63-4087-bed2-33219f15fc1a",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains show id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.expect(jsonData.id).to.not.be.empty;",
+											"    var showId = jsonData.id;",
+											"",
+											"    pm.environment.set(\"showId\", showId);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Show Name\",\n    \"imageURL\": \"https://show-image.example.com\",\n    \"hosts\": \"Show Hosts\",\n    \"location\": \"Show Location\",\n    \"showTime\": \"Show Time\",\n    \"startTime\": \"Show Start Time\",\n    \"endTime\": \"Show End Time\",\n    \"summary\": \"Show Summary\",\n    \"facebookURL\": \"https://facebook.com/show-name\",\n    \"twitterURL\": \"https://twitter.com/show-name\",\n    \"websiteURL\": \"https://show-name.example.com\"\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/shows",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"shows"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The show that was created",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"abc123\",\n \"name\": \"Wobbly Wednesday\",\n \"imageURL\": \"https://example.com/show-image.jpg\",\n \"hosts\": \"Tmart and Tmil\",\n \"location\": \"Texas, USA\",\n \"showTime\": \"WEDNESDAY\",\n \"startTime\": \"2020-08-26T00:00:00+00:00\",\n \"endTime\": \"2020-08-26T02:00:00+00:00\",\n \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n \"websiteURL\": \"https://wobblywednesday.com\"\n}"
+								},
+								{
+									"name": "The request is missing proper authorization",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "An unexpected error occurred",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "get shows",
+					"item": [
+						{
+							"name": "Get list of shows",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "8173a519-7f36-4e7e-aa75-9a615d74d915",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "b5aa3bcf-3084-4864-bfa5-106405dbc42c",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains shows\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.expect(jsonData).to.not.be.empty;",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/shows",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"shows"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Shows",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "[\n {\n  \"id\": \"abc123\",\n  \"name\": \"Wobbly Wednesday\",\n  \"imageURL\": \"https://example.com/show-image.jpg\",\n  \"hosts\": \"Tmart and Tmil\",\n  \"location\": \"Texas, USA\",\n  \"showTime\": \"WEDNESDAY\",\n  \"startTime\": \"2020-08-26T00:00:00+00:00\",\n  \"endTime\": \"2020-08-26T02:00:00+00:00\",\n  \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n  \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n  \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n  \"websiteURL\": \"https://wobblywednesday.com\"\n },\n {\n  \"id\": \"abc123\",\n  \"name\": \"Wobbly Wednesday\",\n  \"imageURL\": \"https://example.com/show-image.jpg\",\n  \"hosts\": \"Tmart and Tmil\",\n  \"location\": \"Texas, USA\",\n  \"showTime\": \"WEDNESDAY\",\n  \"startTime\": \"2020-08-26T00:00:00+00:00\",\n  \"endTime\": \"2020-08-26T02:00:00+00:00\",\n  \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n  \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n  \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n  \"websiteURL\": \"https://wobblywednesday.com\"\n }\n]"
+								},
+								{
+									"name": "An unexpected error occurred",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get show by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d2429bf6-0909-4f01-bbaa-5e52d39b62fd",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains show id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.expect(jsonData.id).to.not.be.empty;",
+											"    var showId = jsonData.id;",
+											"",
+											"    var environmentShowId = pm.environment.get(\"showId\");",
+											"    pm.expect(showId).to.equal(environmentShowId);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/shows/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"shows",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{showId}}",
+											"type": "string",
+											"description": "(Required) Show ID"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The specified show",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"abc123\",\n \"name\": \"Wobbly Wednesday\",\n \"imageURL\": \"https://example.com/show-image.jpg\",\n \"hosts\": \"Tmart and Tmil\",\n \"location\": \"Texas, USA\",\n \"showTime\": \"WEDNESDAY\",\n \"startTime\": \"2020-08-26T00:00:00+00:00\",\n \"endTime\": \"2020-08-26T02:00:00+00:00\",\n \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n \"websiteURL\": \"https://wobblywednesday.com\"\n}"
+								},
+								{
+									"name": "An unexpected error occurred",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "The resource was not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Modify show",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "60f0c558-fc43-4897-8bd5-94c567e0f081",
+										"exec": [
+											"// Generate a random show name",
+											"const num = pm.variables.replaceIn('{{$randomInt}}');",
+											"const updatedShowName = \"Show \" + num;",
+											"",
+											"pm.environment.set(\"updatedShowName\", updatedShowName);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "ff126fd7-99c2-4381-99ab-960adf1791b9",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains updated show name\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.expect(jsonData.name).to.not.be.empty;",
+											"    var showName = jsonData.name;",
+											"",
+											"    var environmentUpdatedShowName = pm.environment.get(\"updatedShowName\");",
+											"    pm.expect(showName).to.equal(environmentUpdatedShowName);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"{{updatedShowName}}\"\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/shows/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"shows",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{showId}}",
+											"type": "string",
+											"description": "(Required) Show ID"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The request is missing proper authorization",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "The resource was not found",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "An unexpected error occurred",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "The modified show",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Wobbly Wednesday\",\n    \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n    \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n    \"websiteURL\": \"https://wobblywednesday.com\",\n    \"imageURL\": \"https://example.com/show-image.jpg\",\n    \"hosts\": \"Tmart and Tmil\",\n    \"location\": \"Texas, USA\",\n    \"showTime\": \"WEDNESDAY\",\n    \"startTime\": \"2020-08-26T00:00:00+00:00\",\n    \"endTime\": \"2020-08-26T02:00:00+00:00\",\n    \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"abc123\",\n \"name\": \"Wobbly Wednesday\",\n \"imageURL\": \"https://example.com/show-image.jpg\",\n \"hosts\": \"Tmart and Tmil\",\n \"location\": \"Texas, USA\",\n \"showTime\": \"WEDNESDAY\",\n \"startTime\": \"2020-08-26T00:00:00+00:00\",\n \"endTime\": \"2020-08-26T02:00:00+00:00\",\n \"summary\": \"Turn up the bass for 2 hours of house-shaking bass music!\",\n \"facebookURL\": \"https://facebook.com/wobblywednesday\",\n \"twitterURL\": \"https://twitter.com/wobblywednesday\",\n \"websiteURL\": \"https://wobblywednesday.com\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete show",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6501c41f-40ff-473f-a6d3-93e8fe7481b0",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/shows/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"shows",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{showId}}",
+											"type": "string",
+											"description": "(Required) Show ID"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Show deleted successfully",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "The resource was not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "The request is missing proper authorization",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								},
+								{
+									"name": "An unexpected error occurred",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/shows/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"shows",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": 68919974,\n \"message\": \"est tempor officia\"\n}"
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "baseUrl",
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
