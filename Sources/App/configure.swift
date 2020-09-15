@@ -10,7 +10,6 @@ public func configure(_ app: Application) throws {
     setupDatabase(app)
 //    try setupMiddleware(app)
     try setupMigrations(app)
-    try createAdminUserIfNecessary(app)
     
     try registerRoutes(app)
 }
@@ -29,22 +28,18 @@ private func setupDatabase(_ app: Application) {
 //}
 
 private func setupMigrations(_ app: Application) throws {
+    // Create tables
     app.migrations.add(CreateStationConfig())
     app.migrations.add(CreateShow())
     app.migrations.add(CreateUser())
     app.migrations.add(CreateToken())
-    try app.autoMigrate().wait() // TODO: Auto-migrate doesn't seem to play well when doing a `docker-compose up app` command (since the DB container takes a bit longer to start up than the app). Need to remove auto migrations.
-}
-
-private func createAdminUserIfNecessary(_ app: Application) throws {
-    let defaultUsername = Environment.get("DEFAULT_USERNAME") ?? "admin" // TODO: Crash if no defaults are provided in a production scenario
-    let defaultPassword = Environment.get("DEFAULT_PASSWORD") ?? "default" // TODO: Crash if no defaults are provided in a production scenario
-
-    // TODO: It might be better to check whether or not the admin needs to be created via the existence of some file on the file system or a value in some sort of "initial setup" table
-    let userCount = try User.query(on: app.db).count().wait()
-    if userCount == 0 {
-        let defaultUser = try User(username: defaultUsername, password: defaultPassword)
-        try defaultUser.save(on: app.db).wait()
+    
+    // Seed with default data
+    app.migrations.add(CreateDefaultUser())
+    
+    // Auto-migrate if we're running locally during development
+    if app.environment == .development {
+        try app.autoMigrate().wait()
     }
 }
 
