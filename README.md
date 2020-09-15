@@ -75,6 +75,66 @@ Once your Postgres docker container is up and running, you should be able to con
 
 With your PostgreSQL database running via Docker, you should now be able to build & run your app from within Xcode.
 
+## Deploying Using Docker
+
+Deployment can be managed using `docker-compose`, which will use the `Dockerfile` to create an image of the application and the `docker-compose.yml` to bring the application and database containers to life.
+
+### Deploying Using `docker-compose`
+
+The steps in the [Vapor documentation on Docker](https://docs.vapor.codes/4.0/deploy/docker/) can be followed to bring the containers up using `docker-compose`.
+
+Even though the `docker-compose.yml` defines the `db` container as a dependency to the `app` container, the database container will need a little more time to start up before the migrations can be run. Start up the `db` container first:
+
+```bash
+docker-compose up db
+```
+
+Then you can start the `migrate` and `app` containers together:
+
+```bash
+docker-compose up migrate app
+```
+
+Bringing the containers down:
+
+```bash
+docker-compose down
+```
+
+If you make changes, you can rebuild the image before running the `docker-compose up` commands again:
+
+```bash
+docker-compose build
+```
+
+### Additional Docker Tips
+
+List Docker images:
+
+```bash
+docker images
+```
+
+If you need to free up some disk space or want to completely reset Docker to a fresh state (remove images, containers, build cache, etc.), you can use the `docker system prune` command to free up space:
+
+```bash
+docker system prune -a
+```
+
+You can also clean things up manually. List all Docker volumes:
+
+```bash
+docker volume ls
+```
+
+Prune Docker volumes:
+
+```
+docker volume prune
+```
+
+Docker will only prune volumes that are not currently in use by running or stopped containers. Use `docker container ls` to see all running containers. You can use `docker container ls -a` to see stopped containers as well.
+
 ## References
 
 References that have helped me on my server-side Swift journey:
