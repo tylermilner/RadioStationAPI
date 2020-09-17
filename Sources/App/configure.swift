@@ -19,7 +19,8 @@ private func setupDatabase(_ app: Application) {
         hostname: Environment.get("DATABASE_URL") ?? "localhost",
         username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
+        database: Environment.get("DATABASE_NAME") ?? "vapor_database",
+        tlsConfiguration: .forClient(certificateVerification: .none)
     ), as: .psql)
 }
 
