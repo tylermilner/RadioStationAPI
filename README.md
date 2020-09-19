@@ -147,3 +147,4 @@ References that have helped me on my server-side Swift journey:
 * [How to do integration testing on a Vapor server](https://losingfight.com/blog/2018/12/16/how-to-do-integration-testing-on-a-vapor-server/)
 * [Vapor 4 Authentication: Getting Started](https://www.raywenderlich.com/9191035-vapor-4-authentication-getting-started)
 * [All about authentication in Vapor 4](https://theswiftdev.com/all-about-authentication-in-vapor-4/)
+* [Deploying your Vapor 4 app to Heroku](https://itnext.io/deploying-your-vapor-4-app-to-heroku-48b26f9f46cb)
