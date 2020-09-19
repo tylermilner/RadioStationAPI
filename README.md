@@ -75,11 +75,78 @@ Once your Postgres docker container is up and running, you should be able to con
 
 With your PostgreSQL database running via Docker, you should now be able to build & run your app from within Xcode.
 
-## Deploying Using Docker
+## Deployment
+
+This app currently supports deployment via Heroku or Docker.
+
+### Deploying Using Heroku
+
+Deploying the app using Heroku is the "easier" option, since Heroku is designed to handle a lot of the complexities for you. You will need to have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed.
+
+#### Initial Heroku Setup
+
+After installing the Heroku CLI, log in to Heroku:
+
+```bash
+heroku login
+```
+
+You will also need to create an application in Heroku's platform. You can either do this via the web UI or using the Heroku CLI:
+
+```bash
+heroku create radio-station-api-heroku
+```
+
+You will also want to attach a Postgres database to the app as an add-on. You can either do this via the web UI (under the "Resources" tab) or using the Heroku CLI:
+
+```bash
+heroku addons:create heroku-postgresql:hobby-dev
+```
+
+Next, you need to connect the Heroku application to the code repository:
+
+```bash
+heroku git:remote --app radio-station-api-heroku
+```
+
+In order to run the app, Heroku looks to a `Procfile` for instructions. This has *already been created* as [`Procfile`](./Procfile) here in the root of the repo and looks something like this:
+
+```
+release: Run migrate --yes
+web: Run serve --env production --hostname 0.0.0.0 --port $PORT
+```
+
+The `web` process contains instructions for how to run the Vapor app (which is a binary named "Run"). The `release` process is a hook that Heroku provides, allowing us to run some code upon a successful release (after the app has been built and launched). We use this to run our database migrations, which do not run by default in a non-development environment.
+
+One final step needed when configuring Heroku for the first time is to specify the Heroku [buildpack](https://devcenter.heroku.com/articles/buildpacks) that should be used, in this case the one for vapor:
+
+```bash
+heroku buildpacks:set vapor/vapor
+```
+
+#### Heroku Deployment
+
+Heroku is designed to run a deployment when a commit is pushed to the `heroku` remote. It will build and run the app according to the instructions in the `Procfile`.
+
+Push to the `master` branch of the `heroku` remote to trigger a deployment:
+
+```bash
+git push heroku master
+```
+
+It will take a little while for the application to be built, but should eventually succeed with output that looks something like:
+
+```
+https://radio-station-api-heroku.herokuapp.com/ deployed to Heroku
+```
+
+The app has now been deployed to Heroku!
+
+### Deploying Using Docker
 
 Deployment can be managed using `docker-compose`, which will use the `Dockerfile` to create an image of the application and the `docker-compose.yml` to bring the application and database containers to life.
 
-### Deploying Using `docker-compose`
+#### Deploying Using `docker-compose`
 
 The steps in the [Vapor documentation on Docker](https://docs.vapor.codes/4.0/deploy/docker/) can be followed to bring the containers up using `docker-compose`.
 
@@ -107,7 +174,7 @@ If you make changes, you can rebuild the image before running the `docker-compos
 docker-compose build
 ```
 
-### Additional Docker Tips
+#### Additional Docker Tips
 
 List Docker images:
 
