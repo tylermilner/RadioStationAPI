@@ -22,7 +22,7 @@ class StationConfigControllerTests: AppXCTestCase {
         try seed.save(on: app.db).wait()
         
         // Act
-        try app.test(.GET, config) { res in
+        try app.test(.GET, config, afterResponse:  { res in
             
             // Assert
             XCTAssertEqual(res.status, .ok)
@@ -30,7 +30,7 @@ class StationConfigControllerTests: AppXCTestCase {
             XCTAssertContent(StationConfig.Get.self, res) { config in
                 XCTAssertEqual(config, seed.responseDTO)
             }
-        }
+        })
     }
     
     func test_postStationConfig_createsConfig() throws {

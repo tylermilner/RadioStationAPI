@@ -22,7 +22,7 @@ class ShowControllerTests: AppXCTestCase {
         try seed.save(on: app.db).wait()
         
         // Act
-        try app.test(.GET, shows) { res in
+        try app.test(.GET, shows, afterResponse:  { res in
             
             // Assert
             XCTAssertEqual(res.status, .ok)
@@ -31,7 +31,7 @@ class ShowControllerTests: AppXCTestCase {
                 XCTAssertEqual(shows.count, 1)
                 XCTAssertEqual(shows.first, seed.responseDTO)
             }
-        }
+        })
     }
     
     func test_postShows_createsShow() throws {
@@ -73,7 +73,7 @@ class ShowControllerTests: AppXCTestCase {
         let seedId = try XCTUnwrap(seed.id)
         
         // Act
-        try app.test(.GET, "\(shows)/\(seedId)") { res in
+        try app.test(.GET, "\(shows)/\(seedId)", afterResponse:  { res in
             
             // Assert
             XCTAssertEqual(res.status, .ok)
@@ -81,7 +81,7 @@ class ShowControllerTests: AppXCTestCase {
             XCTAssertContent(Show.Get.self, res) { show in
                 XCTAssertEqual(show, seed.responseDTO)
             }
-        }
+        })
     }
     
     func test_patchShow_updatesShow() throws {
