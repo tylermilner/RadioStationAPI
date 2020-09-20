@@ -146,7 +146,43 @@ The app has now been deployed to Heroku!
 
 Deployment can be managed using `docker-compose`, which will use the `Dockerfile` to create an image of the application and the `docker-compose.yml` to bring the application and database containers to life.
 
-#### Deploying Using `docker-compose`
+#### Deploying to Heroku Using Docker
+
+Instead of using the Vapor Heroku buildpack and `Procfile`, you can also deploy dockerized apps to Heroku, which better mirrors how you can deploy locally using Docker.
+
+First, set the app's stack to `container`:
+
+```bash
+heroku stack:set container
+```
+
+Heroku will use information in the `Dockerfile` to build the application. It will also use the information in a `heroku.yml` to deploy the application, similar to how it uses the `Procfile` when deploying using a Heroku buildpack. This has *already been created* in the root of the repo and looks something like this:
+
+```yml
+setup:
+    addons:
+        - plan: heroku-postgresql:hobby-dev
+        as: DATABASE
+build:
+    docker:
+      web: Dockerfile
+release:
+    image: web
+    command:
+        - Run migrate --yes
+run:
+    web: Run serve --env production --hostname 0.0.0.0 --port $PORT
+```
+
+The `setup` section tells Heroku what add-ons should be configured. The `build` section tells Heroku which `Dockerfile` to use for each process. In this case, there is only the `web` process, which corresponds to the `Dockerfile` in the root of the repo. The `release` section specifies the command to run after a successful build. I this case, it runs the database migration on the `web` process, similar to how the `Procfile` was used to accomplish the task. Finally, the `run` section specifies how to run the app.
+
+Finally, make any necessary commits and then push to `heroku/master` as you normally would to trigger a Heroku deployment:
+
+```bash
+git push heroku master
+```
+
+#### Deploying Locally Using `docker-compose`
 
 The steps in the [Vapor documentation on Docker](https://docs.vapor.codes/4.0/deploy/docker/) can be followed to bring the containers up using `docker-compose`.
 
