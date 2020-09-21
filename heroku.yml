@@ -11,6 +11,6 @@ build:
 release:
     image: web
     command:
-      - ./Run migrate --yes
+      - migrate --yes
 run:
     web: Run serve --env production --hostname 0.0.0.0 --port $PORT
