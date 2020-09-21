@@ -4,6 +4,9 @@ setup:
         as: DATABASE
 build:
     docker:
+      release:
+        dockerfile: Dockerfile
+        target: build
       web: Dockerfile
 release:
     image: web
