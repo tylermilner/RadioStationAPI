@@ -79,7 +79,7 @@ With your PostgreSQL database running via Docker, you should now be able to buil
 
 This app currently supports deployment via Heroku or Docker.
 
-### Deploying Using Heroku
+### Deploying Using Heroku `Procfile`
 
 Deploying the app using Heroku is the "easier" option, since Heroku is designed to handle a lot of the complexities for you. You will need to have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed.
 
@@ -124,7 +124,7 @@ One final step needed when configuring Heroku for the first time is to specify t
 heroku buildpacks:set vapor/vapor
 ```
 
-#### Heroku Deployment
+#### Triggering a Heroku Deployment
 
 Heroku is designed to run a deployment when a commit is pushed to the `heroku` remote. It will build and run the app according to the instructions in the `Procfile`.
 
@@ -146,7 +146,7 @@ The app has now been deployed to Heroku!
 
 Deployment can be managed using `docker-compose`, which will use the `Dockerfile` to create an image of the application and the `docker-compose.yml` to bring the application and database containers to life.
 
-#### Deploying to Heroku Using Docker
+#### Deploying to Heroku Using `Dockerfile` and `heroku.yml`
 
 Instead of using the Vapor Heroku buildpack and `Procfile`, you can also deploy dockerized apps to Heroku, which better mirrors how you can deploy locally using Docker.
 
@@ -165,6 +165,7 @@ setup:
         as: DATABASE
 build:
     docker:
+      release:
       web: Dockerfile
 release:
     image: web
@@ -182,7 +183,7 @@ Finally, make any necessary commits and then push to `heroku/master` as you norm
 git push heroku master
 ```
 
-#### Deploying Locally Using `docker-compose`
+#### Deploying Locally Using `Dockerfile` and `docker-compose`
 
 The steps in the [Vapor documentation on Docker](https://docs.vapor.codes/4.0/deploy/docker/) can be followed to bring the containers up using `docker-compose`.
 
