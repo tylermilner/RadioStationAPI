@@ -9,7 +9,7 @@ build:
         target: build
       web: Dockerfile
 release:
-    image: web
+    image: release
     command:
       - ./Run migrate --yes
 run:
