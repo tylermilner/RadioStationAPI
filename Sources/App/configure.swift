@@ -2,11 +2,6 @@ import Fluent
 import FluentPostgresDriver
 import Vapor
 
-enum ConfigurationError: Error {
-    case noDatabaseHostname
-    case noDatabasePassword
-}
-
 // configures your application
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
@@ -20,22 +15,13 @@ public func configure(_ app: Application) throws {
 }
 
 private func setupDatabase(_ app: Application) throws {
-    // Parse the parameters out of Heroku's environment variable so that we can manually set the TLS configuration
-    if let databaseURL = Environment.get("DATABASE_URL"), let postgresConfig = PostgresConfiguration(url: databaseURL) {
-        let socketAddress = try postgresConfig.address()
+    if let databaseURL = Environment.get("DATABASE_URL"), var postgresConfig = PostgresConfiguration(url: databaseURL) {
+        // Certificate verification must be disabled when connecting to Heroku's Postgres database
+        postgresConfig.tlsConfiguration = .forClient(certificateVerification: .none)
         
-        guard let hostname = socketAddress.hostname else { throw ConfigurationError.noDatabaseHostname }
-        guard let password = postgresConfig.password else { throw ConfigurationError.noDatabasePassword }
-        
-        app.databases.use(.postgres(
-            hostname: hostname,
-            username: postgresConfig.username,
-            password: password,
-            database: postgresConfig.database,
-            tlsConfiguration: .forClient(certificateVerification: .none) // Certificate verification must be disabled when connecting to Heroku's Postgres database
-            ), as: .psql)
-    // Database parameters are provided individually when running locally or via Docker
+        app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
     } else {
+        // Database parameters are provided individually when running locally or via Docker
         app.databases.use(.postgres(
             hostname: Environment.get("DATABASE_HOST") ?? "localhost",
             username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
