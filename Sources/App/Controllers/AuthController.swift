@@ -11,7 +11,6 @@ import Vapor
 struct AuthController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
-        // TODO: This uses "basic" auth, which doesn't quite match the spec
         routes.group(User.authenticator()) { passwordAuthenticated in
             passwordAuthenticated.post("authenticate", use: authenticate)
         }

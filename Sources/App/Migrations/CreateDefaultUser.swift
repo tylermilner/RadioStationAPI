@@ -10,9 +10,24 @@ import Vapor
 
 struct CreateDefaultUser: Migration {
     
+    // MARK: - Properties
+    
+    private let defaultUsernameVariableName = "DEFAULT_USERNAME"
+    private let defaultPasswordVariableName = "DEFAULT_PASSWORD"
+    let app: Application
+    
+    // MARK: - Migration
+    
     func prepare(on database: Database) -> EventLoopFuture<Void> {
-        let defaultUsername = Environment.get("DEFAULT_USERNAME") ?? "admin" // TODO: Crash if no defaults are provided in a production scenario
-        let defaultPassword = Environment.get("DEFAULT_PASSWORD") ?? "default" // TODO: Crash if no defaults are provided in a production scenario
+        let defaultUsername = Environment.get(defaultUsernameVariableName) ?? "admin"
+        let defaultPassword = Environment.get(defaultPasswordVariableName) ?? {
+            // If no password is provided, only allow the default password to be used if running in a development environment
+            if app.environment == .development {
+                return "default"
+            } else {
+                fatalError("Missing value for environment variable '\(defaultPasswordVariableName)'")
+            }
+        }()
         
         do {
             let defaultUser = try User(username: defaultUsername, password: defaultPassword)

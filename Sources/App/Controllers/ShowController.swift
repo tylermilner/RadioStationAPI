@@ -41,8 +41,10 @@ struct ShowController: RouteCollection {
     }
     
     func index(req: Request) throws -> EventLoopFuture<Show.Get> {
-        return Show.find(req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound))
+        let showId: UUID? = req.parameters.get("id")
+        
+        return Show.find(showId, on: req.db)
+            .unwrap(or: Abort(.notFound, reason: "Show with ID '\(showId?.uuidString ?? "")' not found"))
             .map { $0.responseDTO }
     }
     
@@ -55,9 +57,10 @@ struct ShowController: RouteCollection {
     
     func update(req: Request) throws -> EventLoopFuture<Show.Get> {
         let patch = try req.content.decode(Show.Update.self)
+        let showId: UUID? = req.parameters.get("id")
         
-        return Show.find(req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound)) // TODO: Provide reason for Abort errors
+        return Show.find(showId, on: req.db)
+            .unwrap(or: Abort(.notFound, reason: "Show with ID '\(showId?.uuidString ?? "")' not found"))
             .flatMap { show in
                 show.patch(with: patch)
                 return show.update(on: req.db)
@@ -66,8 +69,10 @@ struct ShowController: RouteCollection {
     }
     
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        return Show.find(req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound))
+        let showId: UUID? = req.parameters.get("id")
+        
+        return Show.find(showId, on: req.db)
+            .unwrap(or: Abort(.notFound, reason: "Show with ID '\(showId?.uuidString ?? "")' not found"))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .noContent)
     }
