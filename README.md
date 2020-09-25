@@ -202,6 +202,29 @@ docker volume prune
 
 Docker will only prune volumes that are not currently in use by running or stopped containers. Use `docker container ls` to see all running containers. You can use `docker container ls -a` to see stopped containers as well.
 
+## Troubleshooting
+
+### "Address already in use" Error
+
+During local development, sometimes the process will fail to quit properly and cause an "Address already in use" error when performing work on the database:
+
+```
+[ ERROR ] bind(descriptor:ptr:bytes:): Address already in use (errno: 48)
+Fatal error: Error raised at top level: bind(descriptor:ptr:bytes:): Address already in use (errno: 48): file /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-1103.8.25.8/swift/stdlib/public/core/ErrorType.swift, line 200
+2020-09-24 21:51:04.561576-0500 Run[58987:1010032] Fatal error: Error raised at top level: bind(descriptor:ptr:bytes:): Address already in use (errno: 48): file /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-1103.8.25.8/swift/stdlib/public/core/ErrorType.swift, line 200
+Program ended with exit code: 9
+```
+
+You can fix this by following the instructions [here](https://stackoverflow.com/a/54321955) to manually list and then kill the stalled process that's using the port:
+
+```bash
+lsof -i :8080
+```
+
+```bash
+kill {PID}
+```
+
 ## References
 
 References that have helped me on my server-side Swift journey:
