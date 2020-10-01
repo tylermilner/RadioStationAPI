@@ -30,6 +30,7 @@ struct ShowController: RouteCollection {
                 
                 shows.group(showId) { show in
                     show.patch(use: update)
+                    show.put(use: replace)
                     show.delete(use: delete)
                 }
             }
@@ -66,6 +67,19 @@ struct ShowController: RouteCollection {
                 return show.update(on: req.db)
                     .map { show.responseDTO }
         }
+    }
+    
+    func replace(req: Request) throws -> EventLoopFuture<Show.Get> {
+        let replacement = try req.content.decode(Show.Create.self)
+        let showId: UUID? = req.parameters.get("id")
+        
+        return Show.find(showId, on: req.db)
+            .unwrap(or: Abort(.notFound, reason: "Show with ID '\(showId?.uuidString ?? "")' not found"))
+            .flatMap { show in
+                show.replace(with: replacement)
+                return show.update(on: req.db)
+                    .map { show.responseDTO }
+            }
     }
     
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {

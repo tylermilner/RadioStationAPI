@@ -102,6 +102,20 @@ extension Show {
         endTime = patch.endTime ?? endTime
         summary = patch.summary ?? summary
     }
+    
+    func replace(with replace: Show.Create) {
+        name = replace.name
+        facebookURL = replace.facebookURL
+        twitterURL = replace.twitterURL
+        websiteURL = replace.websiteURL
+        imageURL = replace.imageURL
+        hosts = replace.hosts
+        location = replace.location
+        showTime = replace.showTime
+        startTime = replace.startTime
+        endTime = replace.endTime
+        summary = replace.summary
+    }
 }
 
 // MARK: - DTO
