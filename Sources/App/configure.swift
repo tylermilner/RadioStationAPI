@@ -43,7 +43,7 @@ private func setupMigrations(_ app: Application) throws {
     app.migrations.add(CreateToken())
     
     // Seed with default data
-    app.migrations.add(CreateDefaultUser(app: app))
+    app.migrations.add(SeedDefaultUser(app: app))
     
     // Auto-migrate if we're running locally during development
     if app.environment == .development {

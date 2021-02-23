@@ -1,5 +1,5 @@
 //
-//  CreateDefaultUser.swift
+//  SeedDefaultUser.swift
 //  
 //
 //  Created by Tyler Milner on 9/14/20.
@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-struct CreateDefaultUser: Migration {
+struct SeedDefaultUser: Migration {
     
     // MARK: - Properties
     
